@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server --devtool eval --progress --colors --content-base build"
+    "start": "webpack -w & nodemon server.js"
   },
   "author": "Elaine Chang",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "webpack-dev-server": "^1.16.2"
   },
   "dependencies": {
+    "path": "^0.12.7",
     "react": "^15.4.1",
     "react-dom": "^15.4.1"
   }
