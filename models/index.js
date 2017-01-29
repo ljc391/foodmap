@@ -9,4 +9,5 @@ var Restaurant = require('./restaurant');
 // Restaurant.belongsTo(Place);
 // Activity.belongsTo(Place);
 
+
 module.exports = db;
