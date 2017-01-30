@@ -23,7 +23,7 @@ ReactDOM.render(
 
         <Router history={hashHistory}>
           <Route path="/" component={ HomeContainer } onEnter={onRestaurantEnter}  >
-        </Route>
+          </Route>
         </Router>
   </Provider>,
   document.getElementById('app')

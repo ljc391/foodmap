@@ -30190,7 +30190,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.loadRestaurant = exports.LOAD_RESTAURANTS = undefined;
+	exports.loadCurLocation = exports.loadRestaurant = exports.UPDATE_CURRANT_LOCATION = exports.LOAD_RESTAURANTS = undefined;
 	
 	var _axios = __webpack_require__(269);
 	
@@ -30199,6 +30199,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var LOAD_RESTAURANTS = exports.LOAD_RESTAURANTS = "LOAD_RESTAURANTS";
+	var UPDATE_CURRANT_LOCATION = exports.UPDATE_CURRANT_LOCATION = "UPDATE_CURRANT_LOCATION";
 	
 	var receiveRestaurant = function receiveRestaurant(restaurants) {
 	  return {
@@ -30220,6 +30221,21 @@
 	    }).catch(function (err) {
 	      return console.error(err);
 	    });
+	  };
+	};
+	
+	var receiveLocation = function receiveLocation(restaurants) {
+	  return {
+	    type: UPDATE_CURRANT_LOCATION,
+	    receivedCurrentLocation: restaurants
+	  };
+	};
+	
+	var loadCurLocation = exports.loadCurLocation = function loadCurLocation(location) {
+	  return function (dispatch) {
+	    console.log("action creater loadCurLocation");
+	    var action = receiveLocation(location);
+	    dispatch(action);
 	  };
 	};
 
@@ -30252,6 +30268,10 @@
 	var _Map = __webpack_require__(299);
 	
 	var _Map2 = _interopRequireDefault(_Map);
+	
+	var _MapContainer = __webpack_require__(309);
+	
+	var _MapContainer2 = _interopRequireDefault(_MapContainer);
 	
 	var _axios = __webpack_require__(269);
 	
@@ -30291,7 +30311,7 @@
 	        'div',
 	        { id: 'home' },
 	        _react2.default.createElement(_SidebarContainer2.default, null),
-	        _react2.default.createElement(_Map2.default, null)
+	        _react2.default.createElement(_MapContainer2.default, null)
 	      );
 	    }
 	  }]);
@@ -30446,7 +30466,7 @@
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -30464,65 +30484,151 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var EIFFEL_TOWER_POSITION = {
-	  lat: 48.858608,
-	  lng: 2.294471
+	    lat: 48.858608,
+	    lng: 2.294471
 	};
 	
 	var Map = function (_React$Component) {
-	  _inherits(Map, _React$Component);
+	    _inherits(Map, _React$Component);
 	
-	  function Map(props) {
-	    _classCallCheck(this, Map);
+	    function Map(props) {
+	        _classCallCheck(this, Map);
 	
-	    var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
+	        var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
 	
-	    _this.map;
-	    _this.markers = [];
-	    _this.largeInfowindow;
-	    _this.curmarker;
+	        _this.map;
+	        _this.markers = [];
+	        _this.largeInfowindow;
+	        _this.curmarker;
 	
-	    return _this;
-	  }
-	
-	  _createClass(Map, [{
-	    key: "componentDidMount",
-	    value: function componentDidMount() {
-	      console.log("componentDidMount");
-	      this.map = new google.maps.Map(this.refs.map, {
-	        zoom: 16
-	      });
-	      var curmap = this.map;
-	      var cmarker = this.curmarker;
-	      if (navigator.geolocation) {
-	        navigator.geolocation.getCurrentPosition(function (position) {
-	          var pos = {
-	            lat: position.coords.latitude,
-	            lng: position.coords.longitude
-	          };
-	          cmarker = new google.maps.Marker({
-	            map: curmap,
-	            position: pos,
-	            title: "current location",
-	            icon: "./images/cur.png"
-	          });
-	          cmarker.setMap(curmap);
-	          curmap.setCenter(pos);
-	        });
-	      }
+	        return _this;
 	    }
-	  }, {
-	    key: "render",
-	    value: function render() {
 	
-	      return _react2.default.createElement(
-	        "div",
-	        { ref: "map", id: "map" },
-	        "map is here"
-	      );
-	    }
-	  }]);
+	    _createClass(Map, [{
+	        key: "componentDidMount",
+	        value: function componentDidMount() {
+	            console.log("componentDidMount");
+	            this.initMap();
+	            // this.map = new google.maps.Map(this.refs.map, {
+	            //   zoom: 16
+	            // });
+	            // var curmap = this.map;
+	            // var cmarker = this.curmarker;
+	            // if (navigator.geolocation) {
+	            //     navigator.geolocation.getCurrentPosition(function(position) {
+	            //         var pos = {
+	            //           lat: position.coords.latitude,
+	            //           lng: position.coords.longitude
+	            //         };
+	            //         cmarker = new google.maps.Marker({
+	            //             map: curmap,
+	            //             position: pos,
+	            //             title: "current location",
+	            //             icon: "./images/cur.png"
+	            //         });
+	            //         cmarker.setMap(curmap);
+	            //         curmap.setCenter(pos);
 	
-	  return Map;
+	            //     });
+	
+	            // }
+	        }
+	    }, {
+	        key: "initMap",
+	        value: function initMap() {
+	            this.map = new google.maps.Map(this.refs.map, {
+	                zoom: 16
+	            });
+	            var curmap = this.map;
+	            var cmarker = this.curmarker;
+	            if (navigator.geolocation) {
+	                navigator.geolocation.getCurrentPosition(function (position) {
+	                    var pos = {
+	                        lat: position.coords.latitude,
+	                        lng: position.coords.longitude
+	                    };
+	                    cmarker = new google.maps.Marker({
+	                        map: curmap,
+	                        position: pos,
+	                        title: "current location",
+	                        icon: "./images/cur.png"
+	                    });
+	
+	                    // this.curmarker = cmarker;
+	                    cmarker.setMap(curmap);
+	                    curmap.setCenter(pos);
+	                    // this.props.loadCurLocation(curmap);
+	                });
+	            }
+	            // this.load();
+	        }
+	    }, {
+	        key: "load",
+	        value: function load() {
+	            console.log("load");
+	            this.largeInfowindow = new google.maps.InfoWindow();
+	            var bounds = new google.maps.LatLngBounds();
+	            var origin = new google.maps.LatLng(55.930385, -3.118425),
+	                destination = "Stockholm, Sweden";
+	
+	            var restaurants = this.props.restaurants;
+	            console.log("REs", this.props);
+	            var cmarker = this.curmarker;
+	            console.log("cur location", cmarker);
+	            for (var i = 0; i < restaurants.length; i++) {
+	                // console.log("restaurant", restaurants[i]);
+	                // Get the position from the location array.
+	                // {lat:40.725218, lng:  -74.002911 },
+	                var position = { lat: restaurants[i].lat, lng: restaurants[i].lng };
+	                var title = restaurants[i].title;
+	                var properties = restaurants[i];
+	                // Create a marker per location, and put into markers array.
+	                var marker = new google.maps.Marker({
+	                    map: this.map,
+	                    position: position,
+	                    title: title,
+	                    properties: properties,
+	                    icon: "../images/restaurant.png",
+	                    // animation: google.maps.Animation.DROP,
+	                    id: i
+	                });
+	                // console.log("show", cmarker);
+	                // var service = new google.maps.DistanceMatrixService();
+	                //   service.getDistanceMatrix(
+	                //     {
+	                //         origins: [this.curmarker.position],
+	                //         destinations: [position],
+	                //         travelMode: google.maps.TravelMode.DRIVING,
+	                //         avoidHighways: false,
+	                //         avoidTolls: false
+	                //     },
+	                //     function(response, status){
+	                //       //console.log("find dis");
+	                //       marker['distance'] = response.rows[0].elements[0].distance.text;
+	                //       this.markers.push(marker);
+	
+	                //     }
+	                //   );
+	                // marker.addListener('click', function() {
+	                //   populateInfoWindow(this, this.largeInfowindow);
+	                // });
+	                ////bounds.extend(markers[i].position);
+	            }
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            console.log("render", this.props);
+	            this.load();
+	            return _react2.default.createElement(
+	                "div",
+	                { ref: "map", id: "map" },
+	                "map is here"
+	            );
+	        }
+	    }]);
+	
+	    return Map;
 	}(_react2.default.Component);
 	
 	exports.default = Map;
@@ -30583,9 +30689,22 @@
 	      return state;
 	  }
 	}
+	function curLocationReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _actionCreator.UPDATE_CURRANT_LOCATION:
+	      return action.receivedCurrentLocation;
+	    default:
+	      return state;
+	  }
+	}
 	
 	var rootReducer = (0, _redux.combineReducers)({
-	  allRestaurants: allRestaurantReducer
+	  allRestaurants: allRestaurantReducer,
+	  curLocation: curLocationReducer
+	
 	});
 	
 	exports.default = rootReducer;
@@ -31476,6 +31595,47 @@
 	  transformer: undefined
 	};
 	module.exports = exports['default'];
+
+/***/ },
+/* 309 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _reactRedux = __webpack_require__(233);
+	
+	var _actionCreator = __webpack_require__(295);
+	
+	var _Map = __webpack_require__(299);
+	
+	var _Map2 = _interopRequireDefault(_Map);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    restaurants: state.allRestaurants,
+	    curLocation: state.curLocation
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    loadCurLocation: function loadCurLocation() {
+	      // loadRestaurant();
+	      var thunk = (0, _actionCreator.loadCurLocation)();
+	      dispatch(thunk);
+	    }
+	  };
+	};
+	
+	var componentCreator = (0, _reactRedux.connect)(mapStateToProps, null);
+	var MapContainer = componentCreator(_Map2.default);
+	exports.default = MapContainer;
 
 /***/ }
 /******/ ]);

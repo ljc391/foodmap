@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 
 import SidebarContainer from './SidebarContainer';
 import Map from './Map';
+import MapContainer from './MapContainer'
 import axios from 'axios';
 export default class Home extends Component {
 
@@ -20,7 +21,7 @@ export default class Home extends Component {
     return (
       <div id = "home">
         <SidebarContainer />
-        <Map/>
+        <MapContainer/>
       </div>
     );
   }

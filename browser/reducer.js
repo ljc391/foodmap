@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { LOAD_RESTAURANTS  } from './action-creator';
+import { LOAD_RESTAURANTS,UPDATE_CURRANT_LOCATION  } from './action-creator';
 
 function allRestaurantReducer (state = {}, action) {
   switch (action.type) {
@@ -7,9 +7,17 @@ function allRestaurantReducer (state = {}, action) {
     default: return state;
   }
 }
+function curLocationReducer(state = {}, action){
+  switch(action.type){
+    case UPDATE_CURRANT_LOCATION: return action.receivedCurrentLocation;
+    default: return state;
+  }
+}
 
 const rootReducer = combineReducers({
-  allRestaurants: allRestaurantReducer
+  allRestaurants: allRestaurantReducer,
+  curLocation: curLocationReducer
+
 });
 
 export default rootReducer;
