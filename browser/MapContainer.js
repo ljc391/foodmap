@@ -11,9 +11,9 @@ const mapStateToProps = function (state) {
 
 const mapDispatchToProps = function (dispatch) {
   return {
-    loadCurLocation: function () {
+    loadCurLocation: function (location) {
          // loadRestaurant();
-      const thunk = loadCurLocation();
+      const thunk = loadCurLocation(location);
       dispatch(thunk);
     }
   };

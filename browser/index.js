@@ -15,6 +15,7 @@ const onRestaurantEnter = function () {
   const thunk = loadRestaurant();
   store.dispatch(thunk);
 
+
 };
 
 

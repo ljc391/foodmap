@@ -24,10 +24,10 @@ export const loadRestaurant = function () {
 };
 
 
-const receiveLocation = function (restaurants) {
+const receiveLocation = function (location) {
   return {
     type: UPDATE_CURRANT_LOCATION,
-    receivedCurrentLocation: restaurants
+    receivedCurrentLocation: location
   };
 };
 
