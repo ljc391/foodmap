@@ -36,44 +36,11 @@
     <div id="app">
     </div>
       <script type="text/javascript">
-      function initMap() {
-       // console.log("init");
-        // Constructor creates a new map - only center and zoom are required.
 
-        map = new google.maps.Map(document.getElementById('map'), {
-         // center: {lat: 40.7272700, lng: -74.0059700},
-
-          zoom: 13
-        });
-        if (navigator.geolocation) {
-          //console.log("cur");
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-            curmarker = new google.maps.Marker({
-            map: map,
-            position: pos,
-            title: "current location",
-            icon: "./images/cur.png"
-            //properties: properties,
-           // animation: google.maps.Animation.DROP,
-            //id: i
-          });
-
-            curmarker.setMap(map);
-            map.setCenter(pos);
-            // load();
-          });
-
-        }
-
-      }
-
+        // src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-p5aUN3cTmQTXevT6qjjiVAtSk88F1WY&callback=initMap"
       </script>
-     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-p5aUN3cTmQTXevT6qjjiVAtSk88F1WY&callback=initMap">
+     <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-p5aUN3cTmQTXevT6qjjiVAtSk88F1WY">
      </script>
   </body>
 </html>

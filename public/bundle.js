@@ -66,7 +66,7 @@
 	
 	var _HomeContainer2 = _interopRequireDefault(_HomeContainer);
 	
-	var _store = __webpack_require__(297);
+	var _store = __webpack_require__(300);
 	
 	var _store2 = _interopRequireDefault(_store);
 	
@@ -30241,15 +30241,15 @@
 	
 	var _reactRouter = __webpack_require__(32);
 	
-	var _Sidebar = __webpack_require__(306);
+	var _Sidebar = __webpack_require__(297);
 	
 	var _Sidebar2 = _interopRequireDefault(_Sidebar);
 	
-	var _SidebarContainer = __webpack_require__(308);
+	var _SidebarContainer = __webpack_require__(298);
 	
 	var _SidebarContainer2 = _interopRequireDefault(_SidebarContainer);
 	
-	var _Map = __webpack_require__(307);
+	var _Map = __webpack_require__(299);
 	
 	var _Map2 = _interopRequireDefault(_Map);
 	
@@ -30311,17 +30311,243 @@
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(32);
+	
+	var _axios = __webpack_require__(269);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Sidebar = function (_React$Component) {
+	  _inherits(Sidebar, _React$Component);
+	
+	  function Sidebar() {
+	    _classCallCheck(this, Sidebar);
+	
+	    return _possibleConstructorReturn(this, (Sidebar.__proto__ || Object.getPrototypeOf(Sidebar)).apply(this, arguments));
+	  }
+	
+	  _createClass(Sidebar, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      //this.props.onLoadPuppies();
+	      this.showListings = this.showListings.bind(this);
+	    }
+	  }, {
+	    key: 'showListings',
+	    value: function showListings(e) {
+	      e.preventDefault();
+	      console.log("click show listings");
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      // console.log("sidebar", this.props);
+	      return _react2.default.createElement(
+	        'div',
+	        { id: 'sidebar' },
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Elaine\'s Map NYC'
+	        ),
+	        _react2.default.createElement('input', { id: 'show-listings', className: 'btn btn-info', defaultValue: 'Show All Places' }),
+	        _react2.default.createElement('input', { id: 'hide-listings', className: 'btn btn-warning', defaultValue: 'Hide All Places' }),
+	        _react2.default.createElement('input', { type: 'text', id: 'inputbox', className: 'form-control', placeholder: 'Searching...' }),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Sort By ',
+	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'price' }),
+	          ' Price ',
+	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'rating' }),
+	          ' Rating ',
+	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'distance' }),
+	          ' Distance'
+	        ),
+	        _react2.default.createElement(
+	          'ul',
+	          { id: 'listOfPlaces' },
+	          this.props.restaurants.length > 0 ? this.props.restaurants.map(function (restaurant) {
+	            return _react2.default.createElement(
+	              'li',
+	              { key: restaurant.id },
+	              _react2.default.createElement('img', { src: restaurant.img }),
+	              restaurant.name
+	            );
+	          }) : null
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Sidebar;
+	}(_react2.default.Component);
+	
+	exports.default = Sidebar;
+
+/***/ },
+/* 298 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _reactRedux = __webpack_require__(233);
+	
+	var _actionCreator = __webpack_require__(295);
+	
+	var _Sidebar = __webpack_require__(297);
+	
+	var _Sidebar2 = _interopRequireDefault(_Sidebar);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    restaurants: state.allRestaurants
+	  };
+	};
+	
+	// const mapDispatchToProps = function (dispatch) {
+	//   return {
+	//     // onLoadRestaurants: function () {
+	//     //      // loadRestaurant();
+	//     //   const thunk = loadRestaurant();
+	//     //   dispatch(thunk);
+	//     // }
+	//   };
+	// };
+	
+	var componentCreator = (0, _reactRedux.connect)(mapStateToProps, null);
+	var SidebarContainer = componentCreator(_Sidebar2.default);
+	exports.default = SidebarContainer;
+
+/***/ },
+/* 299 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var EIFFEL_TOWER_POSITION = {
+	  lat: 48.858608,
+	  lng: 2.294471
+	};
+	
+	var Map = function (_React$Component) {
+	  _inherits(Map, _React$Component);
+	
+	  function Map(props) {
+	    _classCallCheck(this, Map);
+	
+	    var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
+	
+	    _this.map;
+	    _this.markers = [];
+	    _this.largeInfowindow;
+	    _this.curmarker;
+	
+	    return _this;
+	  }
+	
+	  _createClass(Map, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      console.log("componentDidMount");
+	      this.map = new google.maps.Map(this.refs.map, {
+	        zoom: 16
+	      });
+	      var curmap = this.map;
+	      var cmarker = this.curmarker;
+	      if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(function (position) {
+	          var pos = {
+	            lat: position.coords.latitude,
+	            lng: position.coords.longitude
+	          };
+	          cmarker = new google.maps.Marker({
+	            map: curmap,
+	            position: pos,
+	            title: "current location",
+	            icon: "./images/cur.png"
+	          });
+	          cmarker.setMap(curmap);
+	          curmap.setCenter(pos);
+	        });
+	      }
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	
+	      return _react2.default.createElement(
+	        "div",
+	        { ref: "map", id: "map" },
+	        "map is here"
+	      );
+	    }
+	  }]);
+	
+	  return Map;
+	}(_react2.default.Component);
+	
+	exports.default = Map;
+
+/***/ },
+/* 300 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
 	var _redux = __webpack_require__(242);
 	
-	var _reducer = __webpack_require__(298);
+	var _reducer = __webpack_require__(301);
 	
 	var _reducer2 = _interopRequireDefault(_reducer);
 	
-	var _reduxThunk = __webpack_require__(299);
+	var _reduxThunk = __webpack_require__(302);
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	
-	var _reduxLogger = __webpack_require__(300);
+	var _reduxLogger = __webpack_require__(303);
 	
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 	
@@ -30333,7 +30559,7 @@
 	exports.default = store;
 
 /***/ },
-/* 298 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30365,7 +30591,7 @@
 	exports.default = rootReducer;
 
 /***/ },
-/* 299 */
+/* 302 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30393,7 +30619,7 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 300 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30404,11 +30630,11 @@
 	  value: true
 	});
 	
-	var _core = __webpack_require__(301);
+	var _core = __webpack_require__(304);
 	
-	var _helpers = __webpack_require__(302);
+	var _helpers = __webpack_require__(305);
 	
-	var _defaults = __webpack_require__(305);
+	var _defaults = __webpack_require__(308);
 	
 	var _defaults2 = _interopRequireDefault(_defaults);
 	
@@ -30511,7 +30737,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 301 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30521,9 +30747,9 @@
 	});
 	exports.printBuffer = printBuffer;
 	
-	var _helpers = __webpack_require__(302);
+	var _helpers = __webpack_require__(305);
 	
-	var _diff = __webpack_require__(303);
+	var _diff = __webpack_require__(306);
 	
 	var _diff2 = _interopRequireDefault(_diff);
 	
@@ -30652,7 +30878,7 @@
 	}
 
 /***/ },
-/* 302 */
+/* 305 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -30676,7 +30902,7 @@
 	var timer = exports.timer = typeof performance !== "undefined" && performance !== null && typeof performance.now === "function" ? performance : Date;
 
 /***/ },
-/* 303 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30686,7 +30912,7 @@
 	});
 	exports.default = diffLogger;
 	
-	var _deepDiff = __webpack_require__(304);
+	var _deepDiff = __webpack_require__(307);
 	
 	var _deepDiff2 = _interopRequireDefault(_deepDiff);
 	
@@ -30772,7 +30998,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 304 */
+/* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -31201,7 +31427,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 305 */
+/* 308 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -31250,222 +31476,6 @@
 	  transformer: undefined
 	};
 	module.exports = exports['default'];
-
-/***/ },
-/* 306 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(32);
-	
-	var _axios = __webpack_require__(269);
-	
-	var _axios2 = _interopRequireDefault(_axios);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Sidebar = function (_React$Component) {
-	  _inherits(Sidebar, _React$Component);
-	
-	  function Sidebar() {
-	    _classCallCheck(this, Sidebar);
-	
-	    return _possibleConstructorReturn(this, (Sidebar.__proto__ || Object.getPrototypeOf(Sidebar)).apply(this, arguments));
-	  }
-	
-	  _createClass(Sidebar, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      //this.props.onLoadPuppies();
-	      this.showListings = this.showListings.bind(this);
-	    }
-	  }, {
-	    key: 'showListings',
-	    value: function showListings(e) {
-	      e.preventDefault();
-	      console.log("click show listings");
-	      //   axios.get('/restaurant')
-	      //   .then((res) =>{
-	      //     console.log(res);
-	      //   }
-	      //   )
-	      //   .catch(err=> console.log(err.stack))
-	
-	
-	      // axios.get('/api')
-	      // .then(orders =>{console.log("load", orders); })
-	      //{user_id:res.data[0].user_id, order_id:res.data[0].id, products:res.data[0].products}
-	      // Extend the boundaries of the map for each marker and display the marker
-	      // var ul = document.getElementById("listOfPlaces");
-	      // var mlen = markers.length;
-	      // for (var i = 0; i < markers.length; i++) {
-	      //   showMark(i)
-	      //   if(mlen>ul.children.length){
-	      //     var li = document.createElement('li');
-	      //     var tag = document.createElement('a');
-	      //     tag.setAttribute("href",'javascript:;');
-	      //     tag.setAttribute("onclick",'showTag('+i+');' )
-	      //     tag.appendChild(document.createTextNode(markers[i].title));
-	      //     var img = document.createElement('img');
-	      //     img.setAttribute("src",  markers[i].properties.img);
-	      //     li.appendChild(img);
-	      //     li.appendChild(tag);
-	      //     ul.appendChild(li);
-	      //   }
-	      // }
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      console.log("sidebar", this.props);
-	      return _react2.default.createElement(
-	        'div',
-	        { id: 'sidebar' },
-	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          'Elaine\'s Map NYC'
-	        ),
-	        _react2.default.createElement('input', { id: 'show-listings', className: 'btn btn-info', defaultValue: 'Show All Places', onClick: this.showListings }),
-	        _react2.default.createElement('input', { id: 'hide-listings', className: 'btn btn-warning', defaultValue: 'Hide All Places' }),
-	        _react2.default.createElement('input', { type: 'text', id: 'inputbox', className: 'form-control', placeholder: 'Searching...' }),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'Sort By ',
-	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'price', checked: 'true', onChange: 'search()' }),
-	          ' Price ',
-	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'rating', onChange: 'search()' }),
-	          ' Rating ',
-	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'distance', onChange: 'search()' }),
-	          ' Distance'
-	        ),
-	        _react2.default.createElement(
-	          'ul',
-	          { id: 'listOfPlaces' },
-	          this.props.restaurants.length > 0 ? this.props.restaurants.map(function (restaurant) {
-	            return _react2.default.createElement(
-	              'li',
-	              { key: restaurant.id },
-	              _react2.default.createElement('img', { src: restaurant.img }),
-	              restaurant.name
-	            );
-	          }) : null
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return Sidebar;
-	}(_react2.default.Component);
-	
-	exports.default = Sidebar;
-
-/***/ },
-/* 307 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Map = function (_React$Component) {
-	  _inherits(Map, _React$Component);
-	
-	  function Map() {
-	    _classCallCheck(this, Map);
-	
-	    return _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).apply(this, arguments));
-	  }
-	
-	  _createClass(Map, [{
-	    key: "componentDidMount",
-	    value: function componentDidMount() {}
-	  }, {
-	    key: "render",
-	    value: function render() {
-	
-	      return _react2.default.createElement("div", { id: "map" });
-	    }
-	  }]);
-	
-	  return Map;
-	}(_react2.default.Component);
-	
-	exports.default = Map;
-
-/***/ },
-/* 308 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _reactRedux = __webpack_require__(233);
-	
-	var _actionCreator = __webpack_require__(295);
-	
-	var _Sidebar = __webpack_require__(306);
-	
-	var _Sidebar2 = _interopRequireDefault(_Sidebar);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var mapStateToProps = function mapStateToProps(state) {
-	  return {
-	    restaurants: state.allRestaurants
-	  };
-	};
-	
-	// const mapDispatchToProps = function (dispatch) {
-	//   return {
-	//     // onLoadRestaurants: function () {
-	//     //      // loadRestaurant();
-	//     //   const thunk = loadRestaurant();
-	//     //   dispatch(thunk);
-	//     // }
-	//   };
-	// };
-	
-	var componentCreator = (0, _reactRedux.connect)(mapStateToProps, null);
-	var SidebarContainer = componentCreator(_Sidebar2.default);
-	exports.default = SidebarContainer;
 
 /***/ }
 /******/ ]);

@@ -14,6 +14,7 @@ import { loadRestaurant } from './action-creator';
 const onRestaurantEnter = function () {
   const thunk = loadRestaurant();
   store.dispatch(thunk);
+
 };
 
 
