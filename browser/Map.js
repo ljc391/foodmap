@@ -1,8 +1,5 @@
 import React from 'react';
-const EIFFEL_TOWER_POSITION = {
-  lat: 48.858608,
-  lng: 2.294471
-};
+
 
 export default class Map extends React.Component {
     constructor(props) {
@@ -14,34 +11,34 @@ export default class Map extends React.Component {
         this.state = {curmarker:null};
         this.curmarker ;
 
+        this.clearMark = this.clearMark.bind(this);
+
 
     }
+    componentWillMount(){
+        console.log("WILLM------",this.props);
+    }
     componentDidMount(){
-        console.log("componentDidMount");
+        console.log("DIDM------",this.props);
         this.initMap();
-        // this.map = new google.maps.Map(this.refs.map, {
-        //   zoom: 16
-        // });
-        // var curmap = this.map;
-        // var cmarker = this.curmarker;
-        // if (navigator.geolocation) {
-        //     navigator.geolocation.getCurrentPosition(function(position) {
-        //         var pos = {
-        //           lat: position.coords.latitude,
-        //           lng: position.coords.longitude
-        //         };
-        //         cmarker = new google.maps.Marker({
-        //             map: curmap,
-        //             position: pos,
-        //             title: "current location",
-        //             icon: "./images/cur.png"
-        //         });
-        //         cmarker.setMap(curmap);
-        //         curmap.setCenter(pos);
 
-        //     });
+    }
+    componentDidUpdate(){
+        console.log("DIDUPDATE--------", this.props);
 
-        // }
+        this.clearMark();
+        if(this.curmarker) this.loadMarkers();
+
+    }
+    componentWillReceiveProps(){
+        console.log("WILLRECEVE--------",this.props);
+
+
+
+    }
+    componentWillUpdate(){
+        console.log("WILLUPDATE-----------",this.props);
+
 
     }
     initMap(){
@@ -61,13 +58,10 @@ export default class Map extends React.Component {
                     title: "current location",
                     icon: "./images/cur.png"
                 });
-
-                // this.curmarker = cmarker;
                 this.curmarker.setMap(this.map);
-                // console.log("ha set cur~", this.curmarker);
                 this.map.setCenter(pos);
-                // this.props.loadCurLocation(curmap);
-                this.load();
+                console.log("GET CURRENT LOCATION");
+                this.loadMarkers();
 
             });
 
@@ -76,25 +70,17 @@ export default class Map extends React.Component {
 
 
     }
-    load(){
-        console.log("load");
+    loadMarkers(){
+        console.log("loadMarkers");
         this.largeInfowindow = new google.maps.InfoWindow();
-        var bounds = new google.maps.LatLngBounds();
-        var origin = new google.maps.LatLng(55.930385, -3.118425),
-            destination = "Stockholm, Sweden";
-
+        // var bounds = new google.maps.LatLngBounds();
         var restaurants = this.props.restaurants;
         var cmarker ;//= this.curmarker;
-        // console.log("cur location", this.curmarker);
+        console.log("REST props", restaurants);
         for (var i = 0; i < restaurants.length; i++) {
-            // console.log("restaurant", restaurants[i]);
-            // Get the position from the location array.
-            // {lat:40.725218, lng:  -74.002911 },
             const position = {lat:restaurants[i].lat, lng:restaurants[i].lng} ;
-            var title = restaurants[i].title;
+            var title = restaurants[i].name;
             var properties = restaurants[i];
-            // console.log("prrrrrrrrrrrrrr", properties);
-            // Create a marker per location, and put into markers array.
             const marker = new google.maps.Marker({
               map: this.map,
               position: position,
@@ -104,7 +90,6 @@ export default class Map extends React.Component {
              // animation: google.maps.Animation.DROP,
               id: i
             });
-            // console.log("show", this.curmarker);
             var service = new google.maps.DistanceMatrixService();
               service.getDistanceMatrix(
                 {
@@ -115,7 +100,6 @@ export default class Map extends React.Component {
                     avoidTolls: false
                 },
                 (response, status) => {
-                  //console.log("find dis");
                   marker['distance'] = response.rows[0].elements[0].distance.text;
                   this.markers.push(marker);
 
@@ -127,13 +111,19 @@ export default class Map extends React.Component {
            ////bounds.extend(markers[i].position);
         }
     }
+    clearMark(){
+        console.log("clear marker", this.props);
+        for (var i = 0; i < this.markers.length; i++) {
+          this.markers[i].setMap(null);
+        }
+        this.markers = [];
+    }
+
     populateInfoWindow(marker, infowindow) {
-        // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
           infowindow.marker = marker;
           var star ="";
           var pirce = ""
-          console.log("clik------",marker);
           for(var i = 0; i < marker.properties.rating; i++){
             star+='<img src= "./images/star.png" width = "15 px">';
           }
@@ -153,13 +143,13 @@ export default class Map extends React.Component {
           infowindow.open(this.map, marker);
           // Make sure the marker property is cleared if the infowindow is closed.
           infowindow.addListener('closeclick',()=>{
-            this.setMap(null);
+            marker.setMap(null);
           }) ;
         }
     }
 
   render () {
-    console.log("render", this.props );
+    console.log("RENDER----------map", this.props );
     // this.load(this.props.restaurants);
     return (
       <div ref = "map" id = "map">

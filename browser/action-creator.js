@@ -15,7 +15,7 @@ export const loadRestaurant = function () {
     axios.get('/api')
       // .then(res => res.json())
       .then(restaurants => {
-
+        // console.log("arr", restaurants.data);
         const action = receiveRestaurant(restaurants.data);
         dispatch(action);
       })
@@ -38,3 +38,11 @@ export const loadCurLocation = function (location) {
     dispatch(action);
   };
 };
+
+export const hideRestaurant = function(){
+    return function(dispatch){
+
+        const action = receiveRestaurant([]);
+        dispatch(action);
+    }
+}

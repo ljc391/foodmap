@@ -6,20 +6,28 @@ export default class Sidebar extends React.Component {
   componentDidMount(){
     //this.props.onLoadPuppies();
     this.showListings = this.showListings.bind(this);
+    this.hideListings = this.hideListings.bind(this);
   }
 
   showListings(e) {
-    e.preventDefault();
+    // e.preventDefault();
     console.log("click show listings");
+    this.props.loadRestaurant();
 
-}
+  }
+  hideListings(e) {
+    // e.preventDefault();
+    console.log("click Hide listings", this.props);
+    this.props.hideRestaurants();
+
+  }
   render () {
         // console.log("sidebar", this.props);
     return (
       <div id = "sidebar">
         <h1>Elaine's Map NYC</h1>
-        <input id="show-listings"   className="btn btn-info" defaultValue="Show All Places"  />
-        <input id="hide-listings"   className="btn btn-warning"  defaultValue="Hide All Places"/>
+        <input id="show-listings"   className="btn btn-info" defaultValue="Show All Places" onClick={this.showListings} />
+        <input id="hide-listings"   className="btn btn-warning"  defaultValue="Hide All Places" onClick={this.hideListings} />
         <input type="text" id = "inputbox" className="form-control" placeholder="Searching..."/>
         <p>Sort By <input type="radio" name="sort" id="price"   /> Price <input type="radio" name="sort" id="rating"  /> Rating <input type="radio" name="sort" id="distance"  /> Distance</p>
 

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { loadRestaurant } from './action-creator';
+import {  hideRestaurant, loadRestaurant } from './action-creator';
 import Sidebar from './Sidebar';
 
 const mapStateToProps = function (state) {
@@ -8,16 +8,23 @@ const mapStateToProps = function (state) {
   };
 };
 
-// const mapDispatchToProps = function (dispatch) {
-//   return {
-//     // onLoadRestaurants: function () {
-//     //      // loadRestaurant();
-//     //   const thunk = loadRestaurant();
-//     //   dispatch(thunk);
-//     // }
-//   };
-// };
+const mapDispatchToProps = function (dispatch) {
+  return {
+    hideRestaurants:  ()=> {
+         // loadRestaurant();
+      console.log("container hide");
+      const thunk = hideRestaurant();
+      dispatch(thunk);
+    },
+    loadRestaurant: ()=>{
+      console.log("container show");
+      const thunk = loadRestaurant();
+      dispatch(thunk);
+    }
+  };
+};
 
-const componentCreator = connect(mapStateToProps,null);
+
+const componentCreator = connect(mapStateToProps,mapDispatchToProps);
 const SidebarContainer = componentCreator(Sidebar);
 export default SidebarContainer;

@@ -30190,7 +30190,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.loadCurLocation = exports.loadRestaurant = exports.UPDATE_CURRANT_LOCATION = exports.LOAD_RESTAURANTS = undefined;
+	exports.hideRestaurant = exports.loadCurLocation = exports.loadRestaurant = exports.UPDATE_CURRANT_LOCATION = exports.LOAD_RESTAURANTS = undefined;
 	
 	var _axios = __webpack_require__(269);
 	
@@ -30215,7 +30215,7 @@
 	    _axios2.default.get('/api')
 	    // .then(res => res.json())
 	    .then(function (restaurants) {
-	
+	      // console.log("arr", restaurants.data);
 	      var action = receiveRestaurant(restaurants.data);
 	      dispatch(action);
 	    }).catch(function (err) {
@@ -30235,6 +30235,14 @@
 	  return function (dispatch) {
 	    console.log("action creater loadCurLocation");
 	    var action = receiveLocation(location);
+	    dispatch(action);
+	  };
+	};
+	
+	var hideRestaurant = exports.hideRestaurant = function hideRestaurant() {
+	  return function (dispatch) {
+	
+	    var action = receiveRestaurant([]);
 	    dispatch(action);
 	  };
 	};
@@ -30365,12 +30373,21 @@
 	    value: function componentDidMount() {
 	      //this.props.onLoadPuppies();
 	      this.showListings = this.showListings.bind(this);
+	      this.hideListings = this.hideListings.bind(this);
 	    }
 	  }, {
 	    key: 'showListings',
 	    value: function showListings(e) {
-	      e.preventDefault();
+	      // e.preventDefault();
 	      console.log("click show listings");
+	      this.props.loadRestaurant();
+	    }
+	  }, {
+	    key: 'hideListings',
+	    value: function hideListings(e) {
+	      // e.preventDefault();
+	      console.log("click Hide listings", this.props);
+	      this.props.hideRestaurants();
 	    }
 	  }, {
 	    key: 'render',
@@ -30384,8 +30401,8 @@
 	          null,
 	          'Elaine\'s Map NYC'
 	        ),
-	        _react2.default.createElement('input', { id: 'show-listings', className: 'btn btn-info', defaultValue: 'Show All Places' }),
-	        _react2.default.createElement('input', { id: 'hide-listings', className: 'btn btn-warning', defaultValue: 'Hide All Places' }),
+	        _react2.default.createElement('input', { id: 'show-listings', className: 'btn btn-info', defaultValue: 'Show All Places', onClick: this.showListings }),
+	        _react2.default.createElement('input', { id: 'hide-listings', className: 'btn btn-warning', defaultValue: 'Hide All Places', onClick: this.hideListings }),
 	        _react2.default.createElement('input', { type: 'text', id: 'inputbox', className: 'form-control', placeholder: 'Searching...' }),
 	        _react2.default.createElement(
 	          'p',
@@ -30445,17 +30462,23 @@
 	  };
 	};
 	
-	// const mapDispatchToProps = function (dispatch) {
-	//   return {
-	//     // onLoadRestaurants: function () {
-	//     //      // loadRestaurant();
-	//     //   const thunk = loadRestaurant();
-	//     //   dispatch(thunk);
-	//     // }
-	//   };
-	// };
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    hideRestaurants: function hideRestaurants() {
+	      // loadRestaurant();
+	      console.log("container hide");
+	      var thunk = (0, _actionCreator.hideRestaurant)();
+	      dispatch(thunk);
+	    },
+	    loadRestaurant: function loadRestaurant() {
+	      console.log("container show");
+	      var thunk = (0, _actionCreator.loadRestaurant)();
+	      dispatch(thunk);
+	    }
+	  };
+	};
 	
-	var componentCreator = (0, _reactRedux.connect)(mapStateToProps, null);
+	var componentCreator = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps);
 	var SidebarContainer = componentCreator(_Sidebar2.default);
 	exports.default = SidebarContainer;
 
@@ -30466,7 +30489,7 @@
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -30483,190 +30506,225 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EIFFEL_TOWER_POSITION = {
-	  lat: 48.858608,
-	  lng: 2.294471
-	};
-	
 	var Map = function (_React$Component) {
-	  _inherits(Map, _React$Component);
+	    _inherits(Map, _React$Component);
 	
-	  function Map(props) {
-	    _classCallCheck(this, Map);
+	    function Map(props) {
+	        _classCallCheck(this, Map);
 	
-	    var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
+	        var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
 	
-	    console.log("constructor", props);
-	    _this.map;
-	    _this.markers = [];
-	    _this.largeInfowindow;
-	    _this.state = { curmarker: null };
-	    _this.curmarker;
+	        console.log("constructor", props);
+	        _this.map;
+	        _this.markers = [];
+	        _this.largeInfowindow;
+	        _this.state = { curmarker: null };
+	        _this.curmarker;
 	
-	    return _this;
-	  }
+	        _this.clearMark = _this.clearMark.bind(_this);
 	
-	  _createClass(Map, [{
-	    key: "componentDidMount",
-	    value: function componentDidMount() {
-	      console.log("componentDidMount");
-	      this.initMap();
-	      // this.map = new google.maps.Map(this.refs.map, {
-	      //   zoom: 16
-	      // });
-	      // var curmap = this.map;
-	      // var cmarker = this.curmarker;
-	      // if (navigator.geolocation) {
-	      //     navigator.geolocation.getCurrentPosition(function(position) {
-	      //         var pos = {
-	      //           lat: position.coords.latitude,
-	      //           lng: position.coords.longitude
-	      //         };
-	      //         cmarker = new google.maps.Marker({
-	      //             map: curmap,
-	      //             position: pos,
-	      //             title: "current location",
-	      //             icon: "./images/cur.png"
-	      //         });
-	      //         cmarker.setMap(curmap);
-	      //         curmap.setCenter(pos);
-	
-	      //     });
-	
-	      // }
+	        return _this;
 	    }
-	  }, {
-	    key: "initMap",
-	    value: function initMap() {
-	      var _this2 = this;
 	
-	      console.log("init");
-	      this.map = new google.maps.Map(this.refs.map, {
-	        zoom: 16
-	      });
-	      if (navigator.geolocation) {
-	        navigator.geolocation.getCurrentPosition(function (position) {
-	          var pos = {
-	            lat: position.coords.latitude,
-	            lng: position.coords.longitude
-	          };
-	          _this2.curmarker = new google.maps.Marker({
-	            map: _this2.map,
-	            position: pos,
-	            title: "current location",
-	            icon: "./images/cur.png"
-	          });
-	
-	          // this.curmarker = cmarker;
-	          _this2.curmarker.setMap(_this2.map);
-	          // console.log("ha set cur~", this.curmarker);
-	          _this2.map.setCenter(pos);
-	          // this.props.loadCurLocation(curmap);
-	          _this2.load();
-	        });
-	      }
-	    }
-	  }, {
-	    key: "load",
-	    value: function load() {
-	      var _this3 = this;
-	
-	      console.log("load");
-	      this.largeInfowindow = new google.maps.InfoWindow();
-	      var bounds = new google.maps.LatLngBounds();
-	      var origin = new google.maps.LatLng(55.930385, -3.118425),
-	          destination = "Stockholm, Sweden";
-	
-	      var restaurants = this.props.restaurants;
-	      var cmarker; //= this.curmarker;
-	      // console.log("cur location", this.curmarker);
-	
-	      var _loop = function _loop() {
-	        // console.log("restaurant", restaurants[i]);
-	        // Get the position from the location array.
-	        // {lat:40.725218, lng:  -74.002911 },
-	        var position = { lat: restaurants[i].lat, lng: restaurants[i].lng };
-	        title = restaurants[i].title;
-	        properties = restaurants[i];
-	        // console.log("prrrrrrrrrrrrrr", properties);
-	        // Create a marker per location, and put into markers array.
-	
-	        var marker = new google.maps.Marker({
-	          map: _this3.map,
-	          position: position,
-	          title: title,
-	          properties: properties,
-	          icon: "../images/restaurant.png",
-	          // animation: google.maps.Animation.DROP,
-	          id: i
-	        });
-	        // console.log("show", this.curmarker);
-	        service = new google.maps.DistanceMatrixService();
-	
-	        service.getDistanceMatrix({
-	          origins: [_this3.curmarker.position],
-	          destinations: [position],
-	          travelMode: google.maps.TravelMode.DRIVING,
-	          avoidHighways: false,
-	          avoidTolls: false
-	        }, function (response, status) {
-	          //console.log("find dis");
-	          marker['distance'] = response.rows[0].elements[0].distance.text;
-	          _this3.markers.push(marker);
-	        });
-	        marker.addListener('click', function () {
-	          _this3.populateInfoWindow(marker, _this3.largeInfowindow);
-	        });
-	        ////bounds.extend(markers[i].position);
-	      };
-	
-	      for (var i = 0; i < restaurants.length; i++) {
-	        var title;
-	        var properties;
-	        var service;
-	
-	        _loop();
-	      }
-	    }
-	  }, {
-	    key: "populateInfoWindow",
-	    value: function populateInfoWindow(marker, infowindow) {
-	      var _this4 = this;
-	
-	      // Check to make sure the infowindow is not already opened on this marker.
-	      if (infowindow.marker != marker) {
-	        infowindow.marker = marker;
-	        var star = "";
-	        var pirce = "";
-	        console.log("clik------", marker);
-	        for (var i = 0; i < marker.properties.rating; i++) {
-	          star += '<img src= "./images/star.png" width = "15 px">';
+	    _createClass(Map, [{
+	        key: "componentWillMount",
+	        value: function componentWillMount() {
+	            console.log("WILLM------", this.props);
+	            // this.initMap();
 	        }
-	        for (var i = 0; i < marker.properties.price; i++) {
-	          pirce += '<img src= "./images/dollar.png" width = "12 px">';
+	    }, {
+	        key: "componentDidMount",
+	        value: function componentDidMount() {
+	            console.log("DIDM------", this.props);
+	            this.initMap();
 	        }
-	        infowindow.setContent('<h1 id="firstHeading" class="firstHeading">' + marker.title + '</h1>' + '<img src= "' + marker.properties.img + '" width = "200 px">' + '<p>' + marker.properties.address + '</p>' + '<p>' + marker.properties.description + '</p>' + star + '<br>' + pirce);
-	        infowindow.open(this.map, marker);
-	        // Make sure the marker property is cleared if the infowindow is closed.
-	        infowindow.addListener('closeclick', function () {
-	          _this4.setMap(null);
-	        });
-	      }
-	    }
-	  }, {
-	    key: "render",
-	    value: function render() {
-	      console.log("render", this.props);
-	      // this.load(this.props.restaurants);
-	      return _react2.default.createElement(
-	        "div",
-	        { ref: "map", id: "map" },
-	        "map is here"
-	      );
-	    }
-	  }]);
+	    }, {
+	        key: "componentDidUpdate",
+	        value: function componentDidUpdate() {
+	            console.log("DIDUPDATE--------", this.props);
 	
-	  return Map;
+	            this.clearMark();
+	            if (this.curmarker) this.loadMarkers();
+	        }
+	    }, {
+	        key: "componentWillReceiveProps",
+	        value: function componentWillReceiveProps() {
+	            console.log("WILLRECEVE--------", this.props);
+	            // this.loadMarkers();
+	
+	        }
+	    }, {
+	        key: "componentWillUpdate",
+	        value: function componentWillUpdate() {
+	            console.log("WILLUPDATE-----------", this.props);
+	            // this.clearMark();
+	            // this.loadMarkers();
+	            // this.map = new google.maps.Map(this.refs.map, {
+	            //   zoom: 16
+	            // });
+	            // var curmap = this.map;
+	            // var cmarker = this.curmarker;
+	            // if (navigator.geolocation) {
+	            //     navigator.geolocation.getCurrentPosition(function(position) {
+	            //         var pos = {
+	            //           lat: position.coords.latitude,
+	            //           lng: position.coords.longitude
+	            //         };
+	            //         cmarker = new google.maps.Marker({
+	            //             map: curmap,
+	            //             position: pos,
+	            //             title: "current location",
+	            //             icon: "./images/cur.png"
+	            //         });
+	            //         cmarker.setMap(curmap);
+	            //         curmap.setCenter(pos);
+	
+	            //     });
+	
+	            // }
+	        }
+	    }, {
+	        key: "initMap",
+	        value: function initMap() {
+	            var _this2 = this;
+	
+	            console.log("init");
+	            this.map = new google.maps.Map(this.refs.map, {
+	                zoom: 16
+	            });
+	            if (navigator.geolocation) {
+	                navigator.geolocation.getCurrentPosition(function (position) {
+	                    var pos = {
+	                        lat: position.coords.latitude,
+	                        lng: position.coords.longitude
+	                    };
+	                    _this2.curmarker = new google.maps.Marker({
+	                        map: _this2.map,
+	                        position: pos,
+	                        title: "current location",
+	                        icon: "./images/cur.png"
+	                    });
+	
+	                    // this.curmarker = cmarker;
+	                    _this2.curmarker.setMap(_this2.map);
+	                    // console.log("ha set cur~", this.curmarker);
+	                    _this2.map.setCenter(pos);
+	                    console.log("GET CURRENT LOCATION");
+	                    // this.props.loadCurLocation(curmap);
+	                    _this2.loadMarkers();
+	                });
+	            }
+	        }
+	    }, {
+	        key: "loadMarkers",
+	        value: function loadMarkers() {
+	            var _this3 = this;
+	
+	            console.log("loadMarkers");
+	            // this.clearMark();
+	            this.largeInfowindow = new google.maps.InfoWindow();
+	            var bounds = new google.maps.LatLngBounds();
+	            var origin = new google.maps.LatLng(55.930385, -3.118425),
+	                destination = "Stockholm, Sweden";
+	
+	            var restaurants = this.props.restaurants;
+	            var cmarker; //= this.curmarker;
+	            console.log("REST props", restaurants);
+	
+	            var _loop = function _loop() {
+	                // console.log("restaurant", restaurants[i]);
+	                // Get the position from the location array.
+	                // {lat:40.725218, lng:  -74.002911 },
+	                var position = { lat: restaurants[i].lat, lng: restaurants[i].lng };
+	                title = restaurants[i].name;
+	                properties = restaurants[i];
+	                // console.log("prrrrrrrrrrrrrr", restaurants[i]);
+	                // Create a marker per location, and put into markers array.
+	
+	                var marker = new google.maps.Marker({
+	                    map: _this3.map,
+	                    position: position,
+	                    title: title,
+	                    properties: properties,
+	                    icon: "../images/restaurant.png",
+	                    // animation: google.maps.Animation.DROP,
+	                    id: i
+	                });
+	                // console.log("show", this.curmarker);
+	                service = new google.maps.DistanceMatrixService();
+	
+	                service.getDistanceMatrix({
+	                    origins: [_this3.curmarker.position],
+	                    destinations: [position],
+	                    travelMode: google.maps.TravelMode.DRIVING,
+	                    avoidHighways: false,
+	                    avoidTolls: false
+	                }, function (response, status) {
+	                    //console.log("find dis");
+	                    marker['distance'] = response.rows[0].elements[0].distance.text;
+	                    _this3.markers.push(marker);
+	                });
+	                marker.addListener('click', function () {
+	                    _this3.populateInfoWindow(marker, _this3.largeInfowindow);
+	                });
+	                ////bounds.extend(markers[i].position);
+	            };
+	
+	            for (var i = 0; i < restaurants.length; i++) {
+	                var title;
+	                var properties;
+	                var service;
+	
+	                _loop();
+	            }
+	        }
+	    }, {
+	        key: "clearMark",
+	        value: function clearMark() {
+	            console.log("clear marker", this.props);
+	            for (var i = 0; i < this.markers.length; i++) {
+	                this.markers[i].setMap(null);
+	            }
+	            this.markers = [];
+	            // this.loadMarkers();
+	        }
+	    }, {
+	        key: "populateInfoWindow",
+	        value: function populateInfoWindow(marker, infowindow) {
+	            // Check to make sure the infowindow is not already opened on this marker.
+	            if (infowindow.marker != marker) {
+	                infowindow.marker = marker;
+	                var star = "";
+	                var pirce = "";
+	                console.log("clik------", marker);
+	                for (var i = 0; i < marker.properties.rating; i++) {
+	                    star += '<img src= "./images/star.png" width = "15 px">';
+	                }
+	                for (var i = 0; i < marker.properties.price; i++) {
+	                    pirce += '<img src= "./images/dollar.png" width = "12 px">';
+	                }
+	                infowindow.setContent('<h1 id="firstHeading" class="firstHeading">' + marker.title + '</h1>' + '<img src= "' + marker.properties.img + '" width = "200 px">' + '<p>' + marker.properties.address + '</p>' + '<p>' + marker.properties.description + '</p>' + star + '<br>' + pirce);
+	                infowindow.open(this.map, marker);
+	                // Make sure the marker property is cleared if the infowindow is closed.
+	                infowindow.addListener('closeclick', function () {
+	                    marker.setMap(null);
+	                });
+	            }
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            console.log("RENDER----------map", this.props);
+	            // this.load(this.props.restaurants);
+	            return _react2.default.createElement(
+	                "div",
+	                { ref: "map", id: "map" },
+	                "map is here"
+	            );
+	        }
+	    }]);
+	
+	    return Map;
 	}(_react2.default.Component);
 	
 	exports.default = Map;
