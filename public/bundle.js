@@ -30523,8 +30523,6 @@
 	  value: true
 	});
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _react = __webpack_require__(1);
@@ -30580,9 +30578,13 @@
 	        this.loadMarkers();
 	      }
 	      if (this.props.popRestaurant) {
-	        console.log("POP restaurants", this.markers);
-	
-	        // this.populateInfoWindow(this.markers[this.props.popRestaurant], this.largeInfowindow);
+	        // console.log("POP restaurants", this.props.popRestaurant);
+	        var cur;
+	        for (var i = 0; i < this.markers.length; i++) {
+	          // console.log(this.markers[i], "index", i);
+	          if (this.markers[i].id == this.props.popRestaurant) cur = this.markers[i];
+	        }
+	        this.populateInfoWindow(cur, this.largeInfowindow);
 	      }
 	    }
 	  }, {
@@ -30618,7 +30620,7 @@
 	          });
 	          _this2.curmarker.setMap(_this2.map);
 	          _this2.map.setCenter(pos);
-	          console.log("GET CURRENT LOCATION");
+	          // console.log("GET CURRENT LOCATION");
 	          _this2.loadMarkers();
 	        });
 	      }
@@ -30633,10 +30635,10 @@
 	      // var bounds = new google.maps.LatLngBounds();
 	      var restaurants = this.props.restaurants;
 	      var cmarker; //= this.curmarker;
-	      console.log("REST props", restaurants);
+	      // console.log("REST props", restaurants);
 	
 	      var _loop = function _loop() {
-	        console.log(_typeof(restaurants[i]['id']));
+	        // console.log(typeof restaurants[i]['id']);
 	        id = restaurants[i]['id'];
 	
 	        var position = { lat: restaurants[i].lat, lng: restaurants[i].lng };
@@ -30650,7 +30652,7 @@
 	          properties: properties,
 	          icon: "../images/restaurant.png",
 	          // animation: google.maps.Animation.DROP,
-	          id: i
+	          id: id
 	        });
 	        service = new google.maps.DistanceMatrixService();
 	
@@ -30663,12 +30665,13 @@
 	        }, function (response, status) {
 	          marker['distance'] = response.rows[0].elements[0].distance.text;
 	
-	          _this3.markers.push(marker);
+	          // this.markers.push(marker);
 	        });
 	        marker.addListener('click', function () {
 	          _this3.populateInfoWindow(marker, _this3.largeInfowindow);
 	        });
 	        ////bounds.extend(markers[i].position);
+	        _this3.markers.push(marker);
 	      };
 	
 	      for (var i = 0; i < restaurants.length; i++) {
@@ -30679,6 +30682,7 @@
 	
 	        _loop();
 	      }
+	      // console.log("all markers", this.markers);
 	    }
 	  }, {
 	    key: "clearMark",

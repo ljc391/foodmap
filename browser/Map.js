@@ -32,9 +32,13 @@ export default class Map extends React.Component {
          this.loadMarkers();
        }
         if(this.props.popRestaurant){
-          console.log("POP restaurants", this.markers);
-
-          // this.populateInfoWindow(this.markers[this.props.popRestaurant], this.largeInfowindow);
+          // console.log("POP restaurants", this.props.popRestaurant);
+          var cur;
+          for(var i = 0; i < this.markers.length; i++){
+            // console.log(this.markers[i], "index", i);
+            if(this.markers[i].id == this.props.popRestaurant) cur =this.markers[i];
+          }
+          this.populateInfoWindow(cur, this.largeInfowindow);
         }
 
     }
@@ -68,7 +72,7 @@ export default class Map extends React.Component {
                 });
                 this.curmarker.setMap(this.map);
                 this.map.setCenter(pos);
-                console.log("GET CURRENT LOCATION");
+                // console.log("GET CURRENT LOCATION");
                 this.loadMarkers();
 
             });
@@ -84,9 +88,9 @@ export default class Map extends React.Component {
         // var bounds = new google.maps.LatLngBounds();
         var restaurants = this.props.restaurants;
         var cmarker ;//= this.curmarker;
-        console.log("REST props", restaurants);
+        // console.log("REST props", restaurants);
         for (var i = 0; i < restaurants.length; i++) {
-          console.log(typeof restaurants[i]['id']);
+          // console.log(typeof restaurants[i]['id']);
           var id = restaurants[i]['id'];
             const position = {lat:restaurants[i].lat, lng:restaurants[i].lng} ;
             var title = restaurants[i].name;
@@ -98,7 +102,7 @@ export default class Map extends React.Component {
               properties: properties,
               icon:"../images/restaurant.png",
              // animation: google.maps.Animation.DROP,
-              id: i
+              id: id
             });
             var service = new google.maps.DistanceMatrixService();
               service.getDistanceMatrix(
@@ -112,7 +116,7 @@ export default class Map extends React.Component {
                 (response, status) => {
                   marker['distance'] = response.rows[0].elements[0].distance.text;
 
-                  this.markers.push(marker);
+                  // this.markers.push(marker);
 
                 }
               );
@@ -120,7 +124,9 @@ export default class Map extends React.Component {
               this.populateInfoWindow(marker, this.largeInfowindow);
             });
            ////bounds.extend(markers[i].position);
+           this.markers.push(marker);
         }
+        // console.log("all markers", this.markers);
     }
     clearMark(){
         console.log("clear marker", this.props);
