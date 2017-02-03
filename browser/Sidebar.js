@@ -7,6 +7,7 @@ export default class Sidebar extends React.Component {
     //this.props.onLoadPuppies();
     this.showListings = this.showListings.bind(this);
     this.hideListings = this.hideListings.bind(this);
+    this.showInfo = this.showInfo.bind(this);
   }
 
   showListings(e) {
@@ -21,6 +22,12 @@ export default class Sidebar extends React.Component {
     this.props.hideRestaurants();
 
   }
+  showInfo(id){
+    // e.preventDefault();
+    console.log("show infor");
+    console.log(id);
+    this.props.popRestaurant(id);
+  }
   render () {
         // console.log("sidebar", this.props);
     return (
@@ -34,7 +41,7 @@ export default class Sidebar extends React.Component {
         <ul id = "listOfPlaces">
           {this.props.restaurants.length>0 ? this.props.restaurants.map(restaurant => {
                       return (
-                          <li key = {restaurant.id}>
+                          <li key = {restaurant.id} name = "ha" onClick={() => this.showInfo(restaurant.id)}>
                             <img src={restaurant.img} />
                           { restaurant.name }
                           </li>

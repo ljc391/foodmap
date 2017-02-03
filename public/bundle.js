@@ -30190,7 +30190,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.hideRestaurant = exports.loadCurLocation = exports.loadRestaurant = exports.UPDATE_CURRANT_LOCATION = exports.LOAD_RESTAURANTS = undefined;
+	exports.popRestaurant = exports.hideRestaurant = exports.loadCurLocation = exports.loadRestaurant = exports.UPDATE_POP_RESTAURANT = exports.UPDATE_CURRANT_LOCATION = exports.LOAD_RESTAURANTS = undefined;
 	
 	var _axios = __webpack_require__(269);
 	
@@ -30200,6 +30200,7 @@
 	
 	var LOAD_RESTAURANTS = exports.LOAD_RESTAURANTS = "LOAD_RESTAURANTS";
 	var UPDATE_CURRANT_LOCATION = exports.UPDATE_CURRANT_LOCATION = "UPDATE_CURRANT_LOCATION";
+	var UPDATE_POP_RESTAURANT = exports.UPDATE_POP_RESTAURANT = "UPDATE_POP_RESTAURANT";
 	
 	var receiveRestaurant = function receiveRestaurant(restaurants) {
 	  return {
@@ -30241,8 +30242,20 @@
 	
 	var hideRestaurant = exports.hideRestaurant = function hideRestaurant() {
 	  return function (dispatch) {
-	
 	    var action = receiveRestaurant([]);
+	    dispatch(action);
+	  };
+	};
+	
+	var receivePopRestaurant = function receivePopRestaurant(restaurant) {
+	  return {
+	    type: UPDATE_POP_RESTAURANT,
+	    receiveRestaurant: restaurant
+	  };
+	};
+	var popRestaurant = exports.popRestaurant = function popRestaurant(restaurant) {
+	  return function (dispatch) {
+	    var action = receivePopRestaurant(restaurant);
 	    dispatch(action);
 	  };
 	};
@@ -30374,6 +30387,7 @@
 	      //this.props.onLoadPuppies();
 	      this.showListings = this.showListings.bind(this);
 	      this.hideListings = this.hideListings.bind(this);
+	      this.showInfo = this.showInfo.bind(this);
 	    }
 	  }, {
 	    key: 'showListings',
@@ -30390,8 +30404,18 @@
 	      this.props.hideRestaurants();
 	    }
 	  }, {
+	    key: 'showInfo',
+	    value: function showInfo(id) {
+	      // e.preventDefault();
+	      console.log("show infor");
+	      console.log(id);
+	      this.props.popRestaurant(id);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+	
 	      // console.log("sidebar", this.props);
 	      return _react2.default.createElement(
 	        'div',
@@ -30421,7 +30445,9 @@
 	          this.props.restaurants.length > 0 ? this.props.restaurants.map(function (restaurant) {
 	            return _react2.default.createElement(
 	              'li',
-	              { key: restaurant.id },
+	              { key: restaurant.id, name: 'ha', onClick: function onClick() {
+	                  return _this2.showInfo(restaurant.id);
+	                } },
 	              _react2.default.createElement('img', { src: restaurant.img }),
 	              restaurant.name
 	            );
@@ -30474,6 +30500,11 @@
 	      console.log("container show");
 	      var thunk = (0, _actionCreator.loadRestaurant)();
 	      dispatch(thunk);
+	    },
+	    popRestaurant: function popRestaurant(reataurant) {
+	      console.log("pop restaurant");
+	      var thunk = (0, _actionCreator.popRestaurant)(reataurant);
+	      dispatch(thunk);
 	    }
 	  };
 	};
@@ -30489,8 +30520,10 @@
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
@@ -30507,224 +30540,190 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var Map = function (_React$Component) {
-	    _inherits(Map, _React$Component);
+	  _inherits(Map, _React$Component);
 	
-	    function Map(props) {
-	        _classCallCheck(this, Map);
+	  function Map(props) {
+	    _classCallCheck(this, Map);
 	
-	        var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
 	
-	        console.log("constructor", props);
-	        _this.map;
-	        _this.markers = [];
-	        _this.largeInfowindow;
-	        _this.state = { curmarker: null };
-	        _this.curmarker;
+	    console.log("constructor", props);
+	    _this.map;
+	    _this.markers = [];
+	    _this.largeInfowindow;
+	    _this.state = { curmarker: null };
+	    _this.curmarker;
 	
-	        _this.clearMark = _this.clearMark.bind(_this);
+	    _this.clearMark = _this.clearMark.bind(_this);
 	
-	        return _this;
+	    return _this;
+	  }
+	
+	  _createClass(Map, [{
+	    key: "componentWillMount",
+	    value: function componentWillMount() {
+	      console.log("WILLM------", this.props);
 	    }
+	  }, {
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      console.log("DIDM------", this.props);
+	      this.initMap();
+	    }
+	  }, {
+	    key: "componentDidUpdate",
+	    value: function componentDidUpdate() {
+	      console.log("DIDUPDATE--------", this.props);
 	
-	    _createClass(Map, [{
-	        key: "componentWillMount",
-	        value: function componentWillMount() {
-	            console.log("WILLM------", this.props);
-	            // this.initMap();
+	      if (this.curmarker) {
+	        this.clearMark();
+	        this.loadMarkers();
+	      }
+	      if (this.props.popRestaurant) {
+	        console.log("POP restaurants", this.markers);
+	
+	        // this.populateInfoWindow(this.markers[this.props.popRestaurant], this.largeInfowindow);
+	      }
+	    }
+	  }, {
+	    key: "componentWillReceiveProps",
+	    value: function componentWillReceiveProps() {
+	      console.log("WILLRECEVE--------", this.props);
+	    }
+	  }, {
+	    key: "componentWillUpdate",
+	    value: function componentWillUpdate() {
+	      console.log("WILLUPDATE-----------", this.props);
+	    }
+	  }, {
+	    key: "initMap",
+	    value: function initMap() {
+	      var _this2 = this;
+	
+	      console.log("init");
+	      this.map = new google.maps.Map(this.refs.map, {
+	        zoom: 16
+	      });
+	      if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(function (position) {
+	          var pos = {
+	            lat: position.coords.latitude,
+	            lng: position.coords.longitude
+	          };
+	          _this2.curmarker = new google.maps.Marker({
+	            map: _this2.map,
+	            position: pos,
+	            title: "current location",
+	            icon: "./images/cur.png"
+	          });
+	          _this2.curmarker.setMap(_this2.map);
+	          _this2.map.setCenter(pos);
+	          console.log("GET CURRENT LOCATION");
+	          _this2.loadMarkers();
+	        });
+	      }
+	    }
+	  }, {
+	    key: "loadMarkers",
+	    value: function loadMarkers() {
+	      var _this3 = this;
+	
+	      console.log("loadMarkers");
+	      this.largeInfowindow = new google.maps.InfoWindow();
+	      // var bounds = new google.maps.LatLngBounds();
+	      var restaurants = this.props.restaurants;
+	      var cmarker; //= this.curmarker;
+	      console.log("REST props", restaurants);
+	
+	      var _loop = function _loop() {
+	        console.log(_typeof(restaurants[i]['id']));
+	        id = restaurants[i]['id'];
+	
+	        var position = { lat: restaurants[i].lat, lng: restaurants[i].lng };
+	        title = restaurants[i].name;
+	        properties = restaurants[i];
+	
+	        var marker = new google.maps.Marker({
+	          map: _this3.map,
+	          position: position,
+	          title: title,
+	          properties: properties,
+	          icon: "../images/restaurant.png",
+	          // animation: google.maps.Animation.DROP,
+	          id: i
+	        });
+	        service = new google.maps.DistanceMatrixService();
+	
+	        service.getDistanceMatrix({
+	          origins: [_this3.curmarker.position],
+	          destinations: [position],
+	          travelMode: google.maps.TravelMode.DRIVING,
+	          avoidHighways: false,
+	          avoidTolls: false
+	        }, function (response, status) {
+	          marker['distance'] = response.rows[0].elements[0].distance.text;
+	
+	          _this3.markers.push(marker);
+	        });
+	        marker.addListener('click', function () {
+	          _this3.populateInfoWindow(marker, _this3.largeInfowindow);
+	        });
+	        ////bounds.extend(markers[i].position);
+	      };
+	
+	      for (var i = 0; i < restaurants.length; i++) {
+	        var id;
+	        var title;
+	        var properties;
+	        var service;
+	
+	        _loop();
+	      }
+	    }
+	  }, {
+	    key: "clearMark",
+	    value: function clearMark() {
+	      console.log("clear marker", this.props);
+	      for (var i = 0; i < this.markers.length; i++) {
+	        this.markers[i].setMap(null);
+	      }
+	      this.markers = [];
+	    }
+	  }, {
+	    key: "populateInfoWindow",
+	    value: function populateInfoWindow(marker, infowindow) {
+	      if (infowindow.marker != marker) {
+	        infowindow.marker = marker;
+	        var star = "";
+	        var pirce = "";
+	        for (var i = 0; i < marker.properties.rating; i++) {
+	          star += '<img src= "./images/star.png" width = "15 px">';
 	        }
-	    }, {
-	        key: "componentDidMount",
-	        value: function componentDidMount() {
-	            console.log("DIDM------", this.props);
-	            this.initMap();
+	        for (var i = 0; i < marker.properties.price; i++) {
+	          pirce += '<img src= "./images/dollar.png" width = "12 px">';
 	        }
-	    }, {
-	        key: "componentDidUpdate",
-	        value: function componentDidUpdate() {
-	            console.log("DIDUPDATE--------", this.props);
+	        infowindow.setContent('<h1 id="firstHeading" class="firstHeading">' + marker.title + '</h1>' + '<img src= "' + marker.properties.img + '" width = "200 px">' + '<p>' + marker.properties.address + '</p>' + '<p>' + marker.properties.description + '</p>' + star + '<br>' + pirce);
+	        infowindow.open(this.map, marker);
+	        // Make sure the marker property is cleared if the infowindow is closed.
+	        infowindow.addListener('closeclick', function () {
+	          marker.setMap(null);
+	        });
+	      }
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      console.log("RENDER----------map", this.props);
+	      // this.load(this.props.restaurants);
+	      return _react2.default.createElement(
+	        "div",
+	        { ref: "map", id: "map" },
+	        "map is here"
+	      );
+	    }
+	  }]);
 	
-	            this.clearMark();
-	            if (this.curmarker) this.loadMarkers();
-	        }
-	    }, {
-	        key: "componentWillReceiveProps",
-	        value: function componentWillReceiveProps() {
-	            console.log("WILLRECEVE--------", this.props);
-	            // this.loadMarkers();
-	
-	        }
-	    }, {
-	        key: "componentWillUpdate",
-	        value: function componentWillUpdate() {
-	            console.log("WILLUPDATE-----------", this.props);
-	            // this.clearMark();
-	            // this.loadMarkers();
-	            // this.map = new google.maps.Map(this.refs.map, {
-	            //   zoom: 16
-	            // });
-	            // var curmap = this.map;
-	            // var cmarker = this.curmarker;
-	            // if (navigator.geolocation) {
-	            //     navigator.geolocation.getCurrentPosition(function(position) {
-	            //         var pos = {
-	            //           lat: position.coords.latitude,
-	            //           lng: position.coords.longitude
-	            //         };
-	            //         cmarker = new google.maps.Marker({
-	            //             map: curmap,
-	            //             position: pos,
-	            //             title: "current location",
-	            //             icon: "./images/cur.png"
-	            //         });
-	            //         cmarker.setMap(curmap);
-	            //         curmap.setCenter(pos);
-	
-	            //     });
-	
-	            // }
-	        }
-	    }, {
-	        key: "initMap",
-	        value: function initMap() {
-	            var _this2 = this;
-	
-	            console.log("init");
-	            this.map = new google.maps.Map(this.refs.map, {
-	                zoom: 16
-	            });
-	            if (navigator.geolocation) {
-	                navigator.geolocation.getCurrentPosition(function (position) {
-	                    var pos = {
-	                        lat: position.coords.latitude,
-	                        lng: position.coords.longitude
-	                    };
-	                    _this2.curmarker = new google.maps.Marker({
-	                        map: _this2.map,
-	                        position: pos,
-	                        title: "current location",
-	                        icon: "./images/cur.png"
-	                    });
-	
-	                    // this.curmarker = cmarker;
-	                    _this2.curmarker.setMap(_this2.map);
-	                    // console.log("ha set cur~", this.curmarker);
-	                    _this2.map.setCenter(pos);
-	                    console.log("GET CURRENT LOCATION");
-	                    // this.props.loadCurLocation(curmap);
-	                    _this2.loadMarkers();
-	                });
-	            }
-	        }
-	    }, {
-	        key: "loadMarkers",
-	        value: function loadMarkers() {
-	            var _this3 = this;
-	
-	            console.log("loadMarkers");
-	            // this.clearMark();
-	            this.largeInfowindow = new google.maps.InfoWindow();
-	            var bounds = new google.maps.LatLngBounds();
-	            var origin = new google.maps.LatLng(55.930385, -3.118425),
-	                destination = "Stockholm, Sweden";
-	
-	            var restaurants = this.props.restaurants;
-	            var cmarker; //= this.curmarker;
-	            console.log("REST props", restaurants);
-	
-	            var _loop = function _loop() {
-	                // console.log("restaurant", restaurants[i]);
-	                // Get the position from the location array.
-	                // {lat:40.725218, lng:  -74.002911 },
-	                var position = { lat: restaurants[i].lat, lng: restaurants[i].lng };
-	                title = restaurants[i].name;
-	                properties = restaurants[i];
-	                // console.log("prrrrrrrrrrrrrr", restaurants[i]);
-	                // Create a marker per location, and put into markers array.
-	
-	                var marker = new google.maps.Marker({
-	                    map: _this3.map,
-	                    position: position,
-	                    title: title,
-	                    properties: properties,
-	                    icon: "../images/restaurant.png",
-	                    // animation: google.maps.Animation.DROP,
-	                    id: i
-	                });
-	                // console.log("show", this.curmarker);
-	                service = new google.maps.DistanceMatrixService();
-	
-	                service.getDistanceMatrix({
-	                    origins: [_this3.curmarker.position],
-	                    destinations: [position],
-	                    travelMode: google.maps.TravelMode.DRIVING,
-	                    avoidHighways: false,
-	                    avoidTolls: false
-	                }, function (response, status) {
-	                    //console.log("find dis");
-	                    marker['distance'] = response.rows[0].elements[0].distance.text;
-	                    _this3.markers.push(marker);
-	                });
-	                marker.addListener('click', function () {
-	                    _this3.populateInfoWindow(marker, _this3.largeInfowindow);
-	                });
-	                ////bounds.extend(markers[i].position);
-	            };
-	
-	            for (var i = 0; i < restaurants.length; i++) {
-	                var title;
-	                var properties;
-	                var service;
-	
-	                _loop();
-	            }
-	        }
-	    }, {
-	        key: "clearMark",
-	        value: function clearMark() {
-	            console.log("clear marker", this.props);
-	            for (var i = 0; i < this.markers.length; i++) {
-	                this.markers[i].setMap(null);
-	            }
-	            this.markers = [];
-	            // this.loadMarkers();
-	        }
-	    }, {
-	        key: "populateInfoWindow",
-	        value: function populateInfoWindow(marker, infowindow) {
-	            // Check to make sure the infowindow is not already opened on this marker.
-	            if (infowindow.marker != marker) {
-	                infowindow.marker = marker;
-	                var star = "";
-	                var pirce = "";
-	                console.log("clik------", marker);
-	                for (var i = 0; i < marker.properties.rating; i++) {
-	                    star += '<img src= "./images/star.png" width = "15 px">';
-	                }
-	                for (var i = 0; i < marker.properties.price; i++) {
-	                    pirce += '<img src= "./images/dollar.png" width = "12 px">';
-	                }
-	                infowindow.setContent('<h1 id="firstHeading" class="firstHeading">' + marker.title + '</h1>' + '<img src= "' + marker.properties.img + '" width = "200 px">' + '<p>' + marker.properties.address + '</p>' + '<p>' + marker.properties.description + '</p>' + star + '<br>' + pirce);
-	                infowindow.open(this.map, marker);
-	                // Make sure the marker property is cleared if the infowindow is closed.
-	                infowindow.addListener('closeclick', function () {
-	                    marker.setMap(null);
-	                });
-	            }
-	        }
-	    }, {
-	        key: "render",
-	        value: function render() {
-	            console.log("RENDER----------map", this.props);
-	            // this.load(this.props.restaurants);
-	            return _react2.default.createElement(
-	                "div",
-	                { ref: "map", id: "map" },
-	                "map is here"
-	            );
-	        }
-	    }]);
-	
-	    return Map;
+	  return Map;
 	}(_react2.default.Component);
 	
 	exports.default = Map;
@@ -30752,7 +30751,8 @@
 	var mapStateToProps = function mapStateToProps(state) {
 	  return {
 	    restaurants: state.allRestaurants,
-	    curLocation: state.curLocation
+	    curLocation: state.curLocation,
+	    popRestaurant: state.popRestaurant
 	  };
 	};
 	
@@ -30837,10 +30837,22 @@
 	      return state;
 	  }
 	}
+	function popRestaurantReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _actionCreator.UPDATE_POP_RESTAURANT:
+	      return action.receiveRestaurant;
+	    default:
+	      return state;
+	  }
+	}
 	
 	var rootReducer = (0, _redux.combineReducers)({
 	  allRestaurants: allRestaurantReducer,
-	  curLocation: curLocationReducer
+	  curLocation: curLocationReducer,
+	  popRestaurant: popRestaurantReducer
 	
 	});
 	

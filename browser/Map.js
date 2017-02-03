@@ -26,8 +26,16 @@ export default class Map extends React.Component {
     componentDidUpdate(){
         console.log("DIDUPDATE--------", this.props);
 
-        this.clearMark();
-        if(this.curmarker) this.loadMarkers();
+
+        if(this.curmarker){
+          this.clearMark();
+         this.loadMarkers();
+       }
+        if(this.props.popRestaurant){
+          console.log("POP restaurants", this.markers);
+
+          // this.populateInfoWindow(this.markers[this.props.popRestaurant], this.largeInfowindow);
+        }
 
     }
     componentWillReceiveProps(){
@@ -78,6 +86,8 @@ export default class Map extends React.Component {
         var cmarker ;//= this.curmarker;
         console.log("REST props", restaurants);
         for (var i = 0; i < restaurants.length; i++) {
+          console.log(typeof restaurants[i]['id']);
+          var id = restaurants[i]['id'];
             const position = {lat:restaurants[i].lat, lng:restaurants[i].lng} ;
             var title = restaurants[i].name;
             var properties = restaurants[i];
@@ -101,6 +111,7 @@ export default class Map extends React.Component {
                 },
                 (response, status) => {
                   marker['distance'] = response.rows[0].elements[0].distance.text;
+
                   this.markers.push(marker);
 
                 }
@@ -147,6 +158,7 @@ export default class Map extends React.Component {
           }) ;
         }
     }
+
 
   render () {
     console.log("RENDER----------map", this.props );

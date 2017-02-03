@@ -6,6 +6,7 @@ const mapStateToProps = function (state) {
   return {
     restaurants: state.allRestaurants,
     curLocation: state.curLocation,
+    popRestaurant: state.popRestaurant
   };
 };
 
@@ -15,7 +16,7 @@ const mapDispatchToProps = function (dispatch) {
          // loadRestaurant();
       const thunk = loadCurLocation(location);
       dispatch(thunk);
-    }
+    },
   };
 };
 

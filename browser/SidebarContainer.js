@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import {  hideRestaurant, loadRestaurant } from './action-creator';
+import {  hideRestaurant, loadRestaurant, popRestaurant } from './action-creator';
 import Sidebar from './Sidebar';
 
 const mapStateToProps = function (state) {
@@ -19,6 +19,11 @@ const mapDispatchToProps = function (dispatch) {
     loadRestaurant: ()=>{
       console.log("container show");
       const thunk = loadRestaurant();
+      dispatch(thunk);
+    },
+    popRestaurant: (reataurant)=> {
+      console.log("pop restaurant");
+      const thunk = popRestaurant(reataurant);
       dispatch(thunk);
     }
   };
