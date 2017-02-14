@@ -1,6 +1,7 @@
 export const LOAD_RESTAURANTS = "LOAD_RESTAURANTS";
 export const UPDATE_CURRANT_LOCATION = "UPDATE_CURRANT_LOCATION";
 export const UPDATE_POP_RESTAURANT = "UPDATE_POP_RESTAURANT";
+export const FILTER_RESTAURANTS = "FILTER_RESTAURANTS";
 import axios from 'axios';
 const receiveRestaurant = function (restaurants) {
   return {
@@ -58,6 +59,21 @@ const receivePopRestaurant = function (restaurant){
 export const popRestaurant = function(restaurant){
   return function (dispatch){
       const action = receivePopRestaurant(restaurant);
+      dispatch(action);
+  }
+
+}
+const receiveFilterRestaurant = function (restaurant){
+  return{
+    type: FILTER_RESTAURANTS,
+    receiveFilterRestaurant: restaurant
+  }
+
+
+}
+export const updateFilterRestaurant = function(restaurant){
+  return function (dispatch){
+      const action = receiveFilterRestaurant(restaurant);
       dispatch(action);
   }
 

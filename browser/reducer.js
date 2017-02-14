@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { LOAD_RESTAURANTS, UPDATE_CURRANT_LOCATION, UPDATE_POP_RESTAURANT  } from './action-creator';
+import { LOAD_RESTAURANTS, UPDATE_CURRANT_LOCATION, UPDATE_POP_RESTAURANT, FILTER_RESTAURANTS} from './action-creator';
 
 function allRestaurantReducer (state = {}, action) {
   switch (action.type) {
@@ -19,11 +19,18 @@ function popRestaurantReducer(state = null, action){
     default: return state;
   }
 }
+function filterRestaurantReducer(state = null, action){
+  switch(action.type){
+    case FILTER_RESTAURANTS: return action.receiveFilterRestaurant;
+    default: return state;
+  }
+}
 
 const rootReducer = combineReducers({
   allRestaurants: allRestaurantReducer,
   curLocation: curLocationReducer,
-  popRestaurant: popRestaurantReducer
+  popRestaurant: popRestaurantReducer,
+  filterRestaurants: filterRestaurantReducer
 
 });
 

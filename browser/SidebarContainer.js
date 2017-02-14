@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
-import {  hideRestaurant, loadRestaurant, popRestaurant } from './action-creator';
+import {  hideRestaurant, loadRestaurant, popRestaurant, updateFilterRestaurant } from './action-creator';
 import Sidebar from './Sidebar';
 
 const mapStateToProps = function (state) {
   return {
-    restaurants: state.allRestaurants
+    restaurants: state.allRestaurants,
+    filterRestaurants: state.filterRestaurants
   };
 };
 
@@ -24,6 +25,11 @@ const mapDispatchToProps = function (dispatch) {
     popRestaurant: (reataurant)=> {
       console.log("pop restaurant");
       const thunk = popRestaurant(reataurant);
+      dispatch(thunk);
+    },
+    updateFilterRestaurant: (reataurants)=> {
+      console.log("pop restaurant");
+      const thunk = updateFilterRestaurant(reataurants);
       dispatch(thunk);
     }
   };

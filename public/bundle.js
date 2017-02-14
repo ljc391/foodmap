@@ -30190,7 +30190,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.popRestaurant = exports.hideRestaurant = exports.loadCurLocation = exports.loadRestaurant = exports.UPDATE_POP_RESTAURANT = exports.UPDATE_CURRANT_LOCATION = exports.LOAD_RESTAURANTS = undefined;
+	exports.updateFilterRestaurant = exports.popRestaurant = exports.hideRestaurant = exports.loadCurLocation = exports.loadRestaurant = exports.FILTER_RESTAURANTS = exports.UPDATE_POP_RESTAURANT = exports.UPDATE_CURRANT_LOCATION = exports.LOAD_RESTAURANTS = undefined;
 	
 	var _axios = __webpack_require__(269);
 	
@@ -30201,6 +30201,7 @@
 	var LOAD_RESTAURANTS = exports.LOAD_RESTAURANTS = "LOAD_RESTAURANTS";
 	var UPDATE_CURRANT_LOCATION = exports.UPDATE_CURRANT_LOCATION = "UPDATE_CURRANT_LOCATION";
 	var UPDATE_POP_RESTAURANT = exports.UPDATE_POP_RESTAURANT = "UPDATE_POP_RESTAURANT";
+	var FILTER_RESTAURANTS = exports.FILTER_RESTAURANTS = "FILTER_RESTAURANTS";
 	
 	var receiveRestaurant = function receiveRestaurant(restaurants) {
 	  return {
@@ -30256,6 +30257,18 @@
 	var popRestaurant = exports.popRestaurant = function popRestaurant(restaurant) {
 	  return function (dispatch) {
 	    var action = receivePopRestaurant(restaurant);
+	    dispatch(action);
+	  };
+	};
+	var receiveFilterRestaurant = function receiveFilterRestaurant(restaurant) {
+	  return {
+	    type: FILTER_RESTAURANTS,
+	    receiveFilterRestaurant: restaurant
+	  };
+	};
+	var updateFilterRestaurant = exports.updateFilterRestaurant = function updateFilterRestaurant(restaurant) {
+	  return function (dispatch) {
+	    var action = receiveFilterRestaurant(restaurant);
 	    dispatch(action);
 	  };
 	};
@@ -30388,13 +30401,16 @@
 	      this.showListings = this.showListings.bind(this);
 	      this.hideListings = this.hideListings.bind(this);
 	      this.showInfo = this.showInfo.bind(this);
+	      this.searchInput = this.searchInput.bind(this);
 	    }
 	  }, {
 	    key: 'showListings',
 	    value: function showListings(e) {
 	      // e.preventDefault();
 	      console.log("click show listings");
-	      this.props.loadRestaurant();
+	
+	      this.props.updateFilterRestaurant(this.props.estaurants);
+	      // this.props.loadRestaurant();
 	    }
 	  }, {
 	    key: 'hideListings',
@@ -30412,6 +30428,27 @@
 	      this.props.popRestaurant(id);
 	    }
 	  }, {
+	    key: 'searchInput',
+	    value: function searchInput(e) {
+	      var title = e.target.value.toLowerCase();
+	      var res = [];
+	      for (var i = 0; i < this.props.restaurants.length; i++) {
+	        if (this.props.restaurants[i].name.indexOf(title) >= 0) {
+	          res.push(this.props.restaurants[i]);
+	        } else {
+	          for (var j = 0; j < this.props.restaurants[i].tags.length; j++) {
+	
+	            if (this.props.restaurants[i].tags[j].indexOf(title) >= 0) {
+	              res.push(this.props.restaurants[i]);
+	              break;
+	            }
+	          }
+	        }
+	      }
+	      this.props.updateFilterRestaurant(res);
+	      // event.target.value
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
@@ -30427,7 +30464,7 @@
 	        ),
 	        _react2.default.createElement('input', { id: 'show-listings', className: 'btn btn-info', defaultValue: 'Show All Places', onClick: this.showListings }),
 	        _react2.default.createElement('input', { id: 'hide-listings', className: 'btn btn-warning', defaultValue: 'Hide All Places', onClick: this.hideListings }),
-	        _react2.default.createElement('input', { type: 'text', id: 'inputbox', className: 'form-control', placeholder: 'Searching...' }),
+	        _react2.default.createElement('input', { type: 'text', id: 'inputbox', className: 'form-control', placeholder: 'Searching...', onChange: this.searchInput }),
 	        _react2.default.createElement(
 	          'p',
 	          null,
@@ -30442,7 +30479,7 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { id: 'listOfPlaces' },
-	          this.props.restaurants.length > 0 ? this.props.restaurants.map(function (restaurant) {
+	          this.props.filterRestaurants && this.props.filterRestaurants.length > 0 ? this.props.filterRestaurants.map(function (restaurant) {
 	            return _react2.default.createElement(
 	              'li',
 	              { key: restaurant.id, name: 'ha', onClick: function onClick() {
@@ -30484,7 +30521,8 @@
 	
 	var mapStateToProps = function mapStateToProps(state) {
 	  return {
-	    restaurants: state.allRestaurants
+	    restaurants: state.allRestaurants,
+	    filterRestaurants: state.filterRestaurants
 	  };
 	};
 	
@@ -30504,6 +30542,11 @@
 	    popRestaurant: function popRestaurant(reataurant) {
 	      console.log("pop restaurant");
 	      var thunk = (0, _actionCreator.popRestaurant)(reataurant);
+	      dispatch(thunk);
+	    },
+	    updateFilterRestaurant: function updateFilterRestaurant(reataurants) {
+	      console.log("pop restaurant");
+	      var thunk = (0, _actionCreator.updateFilterRestaurant)(reataurants);
 	      dispatch(thunk);
 	    }
 	  };
@@ -30852,11 +30895,23 @@
 	      return state;
 	  }
 	}
+	function filterRestaurantReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _actionCreator.FILTER_RESTAURANTS:
+	      return action.receiveFilterRestaurant;
+	    default:
+	      return state;
+	  }
+	}
 	
 	var rootReducer = (0, _redux.combineReducers)({
 	  allRestaurants: allRestaurantReducer,
 	  curLocation: curLocationReducer,
-	  popRestaurant: popRestaurantReducer
+	  popRestaurant: popRestaurantReducer,
+	  filterRestaurants: filterRestaurantReducer
 	
 	});
 	
