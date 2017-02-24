@@ -86,7 +86,7 @@ export default class Map extends React.Component {
         console.log("loadMarkers");
         this.largeInfowindow = new google.maps.InfoWindow();
         // var bounds = new google.maps.LatLngBounds();
-        var restaurants = this.props.restaurants;
+        var restaurants = this.props.filterRestaurants;
         var cmarker ;//= this.curmarker;
         // console.log("REST props", restaurants);
         for (var i = 0; i < restaurants.length; i++) {

@@ -6,7 +6,8 @@ const mapStateToProps = function (state) {
   return {
     restaurants: state.allRestaurants,
     curLocation: state.curLocation,
-    popRestaurant: state.popRestaurant
+    popRestaurant: state.popRestaurant,
+    filterRestaurants: state.filterRestaurants
   };
 };
 

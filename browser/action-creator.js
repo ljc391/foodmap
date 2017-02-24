@@ -14,14 +14,14 @@ export const loadRestaurant = function () {
   return function (dispatch) {
     console.log("action creater loadRestaurant");
 
-    axios.get('/api')
-      // .then(res => res.json())
-      .then(restaurants => {
-        // console.log("arr", restaurants.data);
-        const action = receiveRestaurant(restaurants.data);
-        dispatch(action);
-      })
-      .catch(err => console.error(err));
+      axios.get('/api')
+        // .then(res => res.json())
+        .then(restaurants => {
+          // console.log("arr", restaurants.data);
+          const action = receiveRestaurant(restaurants.data);
+          dispatch(action);
+        })
+        .catch(err => console.error(err));
   };
 };
 

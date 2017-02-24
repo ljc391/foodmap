@@ -19,7 +19,7 @@ function popRestaurantReducer(state = null, action){
     default: return state;
   }
 }
-function filterRestaurantReducer(state = null, action){
+function filterRestaurantReducer(state = [], action){
   switch(action.type){
     case FILTER_RESTAURANTS: return action.receiveFilterRestaurant;
     default: return state;

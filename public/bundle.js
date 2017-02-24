@@ -30409,7 +30409,7 @@
 	      // e.preventDefault();
 	      console.log("click show listings");
 	
-	      this.props.updateFilterRestaurant(this.props.estaurants);
+	      this.props.updateFilterRestaurant(this.props.restaurants);
 	      // this.props.loadRestaurant();
 	    }
 	  }, {
@@ -30417,7 +30417,8 @@
 	    value: function hideListings(e) {
 	      // e.preventDefault();
 	      console.log("click Hide listings", this.props);
-	      this.props.hideRestaurants();
+	      // this.props.hideRestaurants();
+	      this.props.updateFilterRestaurant([]);
 	    }
 	  }, {
 	    key: 'showInfo',
@@ -30676,7 +30677,7 @@
 	      console.log("loadMarkers");
 	      this.largeInfowindow = new google.maps.InfoWindow();
 	      // var bounds = new google.maps.LatLngBounds();
-	      var restaurants = this.props.restaurants;
+	      var restaurants = this.props.filterRestaurants;
 	      var cmarker; //= this.curmarker;
 	      // console.log("REST props", restaurants);
 	
@@ -30799,7 +30800,8 @@
 	  return {
 	    restaurants: state.allRestaurants,
 	    curLocation: state.curLocation,
-	    popRestaurant: state.popRestaurant
+	    popRestaurant: state.popRestaurant,
+	    filterRestaurants: state.filterRestaurants
 	  };
 	};
 	
@@ -30896,7 +30898,7 @@
 	  }
 	}
 	function filterRestaurantReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 	  var action = arguments[1];
 	
 	  switch (action.type) {

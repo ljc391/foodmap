@@ -15,14 +15,15 @@ export default class Sidebar extends React.Component {
     // e.preventDefault();
     console.log("click show listings");
 
-    this.props.updateFilterRestaurant(this.props.estaurants);
+    this.props.updateFilterRestaurant(this.props.restaurants);
     // this.props.loadRestaurant();
 
   }
   hideListings(e) {
     // e.preventDefault();
     console.log("click Hide listings", this.props);
-    this.props.hideRestaurants();
+    // this.props.hideRestaurants();
+    this.props.updateFilterRestaurant([]);
 
   }
   showInfo(id){
