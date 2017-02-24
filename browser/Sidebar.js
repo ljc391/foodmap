@@ -9,6 +9,8 @@ export default class Sidebar extends React.Component {
     this.hideListings = this.hideListings.bind(this);
     this.showInfo = this.showInfo.bind(this);
     this.searchInput = this.searchInput.bind(this);
+    this.sortRestaurants = this.sortRestaurants.bind(this);
+    this.state = {sortBy:"price"};
   }
 
   showListings(e) {
@@ -22,7 +24,6 @@ export default class Sidebar extends React.Component {
   hideListings(e) {
     // e.preventDefault();
     console.log("click Hide listings", this.props);
-    // this.props.hideRestaurants();
     this.props.updateFilterRestaurant([]);
 
   }
@@ -51,15 +52,33 @@ export default class Sidebar extends React.Component {
     this.props.updateFilterRestaurant(res);
     // event.target.value
   }
+  sortRestaurants(e){
+    console.log("sort restaurants by price", e.target.id);
+    this.setState({sortBy: e.target.id});
+    var res = this.props.restaurants;
+    if(this.props.filterRestaurants.length>0)res= this.props.filterRestaurants;
+    if(e.target.id == "price"){
+          res.sort(function(a,b){
+            return a.price-b.price;
+          })
+    }else if(e.target.id == "rating"){
+            res.sort(function(a,b){
+              return b.rating-a.rating;
+            })
+    }
+
+    console.log(res);
+    this.props.updateFilterRestaurant(res);
+  }
   render () {
-        // console.log("sidebar", this.props);
+        console.log("sidebar", this.state);
     return (
       <div id = "sidebar">
         <h1>Elaine's Map NYC</h1>
         <input id="show-listings"   className="btn btn-info" defaultValue="Show All Places" onClick={this.showListings} />
         <input id="hide-listings"   className="btn btn-warning"  defaultValue="Hide All Places" onClick={this.hideListings} />
         <input type="text" id = "inputbox" className="form-control" placeholder="Searching..."onChange={this.searchInput}/>
-        <p>Sort By <input type="radio" name="sort" id="price"   /> Price <input type="radio" name="sort" id="rating"  /> Rating <input type="radio" name="sort" id="distance"  /> Distance</p>
+        <p>Sort By <input type="radio" name="sort" id="price"  onChange={this.sortRestaurants}/> Price <input type="radio" name="sort" id="rating"  onChange={this.sortRestaurants}/> Rating <input type="radio" name="sort" id="distance"  onChange={this.sortRestaurants}/> Distance</p>
 
         <ul id = "listOfPlaces">
           {this.props.filterRestaurants&&this.props.filterRestaurants.length>0 ? this.props.filterRestaurants.map(restaurant => {
@@ -67,6 +86,7 @@ export default class Sidebar extends React.Component {
                           <li key = {restaurant.id} name = "ha" onClick={() => this.showInfo(restaurant.id)}>
                             <img src={restaurant.img} />
                           { restaurant.name }
+
                           </li>
 
                       )

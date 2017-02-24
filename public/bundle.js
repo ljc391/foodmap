@@ -30402,6 +30402,8 @@
 	      this.hideListings = this.hideListings.bind(this);
 	      this.showInfo = this.showInfo.bind(this);
 	      this.searchInput = this.searchInput.bind(this);
+	      this.sortRestaurants = this.sortRestaurants.bind(this);
+	      this.state = { sortBy: "price" };
 	    }
 	  }, {
 	    key: 'showListings',
@@ -30417,7 +30419,6 @@
 	    value: function hideListings(e) {
 	      // e.preventDefault();
 	      console.log("click Hide listings", this.props);
-	      // this.props.hideRestaurants();
 	      this.props.updateFilterRestaurant([]);
 	    }
 	  }, {
@@ -30450,11 +30451,31 @@
 	      // event.target.value
 	    }
 	  }, {
+	    key: 'sortRestaurants',
+	    value: function sortRestaurants(e) {
+	      console.log("sort restaurants by price", e.target.id);
+	      this.setState({ sortBy: e.target.id });
+	      var res = this.props.restaurants;
+	      if (this.props.filterRestaurants.length > 0) res = this.props.filterRestaurants;
+	      if (e.target.id == "price") {
+	        res.sort(function (a, b) {
+	          return a.price - b.price;
+	        });
+	      } else if (e.target.id == "rating") {
+	        res.sort(function (a, b) {
+	          return b.rating - a.rating;
+	        });
+	      }
+	
+	      console.log(res);
+	      this.props.updateFilterRestaurant(res);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
 	
-	      // console.log("sidebar", this.props);
+	      console.log("sidebar", this.state);
 	      return _react2.default.createElement(
 	        'div',
 	        { id: 'sidebar' },
@@ -30470,11 +30491,11 @@
 	          'p',
 	          null,
 	          'Sort By ',
-	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'price' }),
+	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'price', onChange: this.sortRestaurants }),
 	          ' Price ',
-	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'rating' }),
+	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'rating', onChange: this.sortRestaurants }),
 	          ' Rating ',
-	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'distance' }),
+	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'distance', onChange: this.sortRestaurants }),
 	          ' Distance'
 	        ),
 	        _react2.default.createElement(
@@ -30529,12 +30550,6 @@
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
-	    hideRestaurants: function hideRestaurants() {
-	      // loadRestaurant();
-	      console.log("container hide");
-	      var thunk = (0, _actionCreator.hideRestaurant)();
-	      dispatch(thunk);
-	    },
 	    loadRestaurant: function loadRestaurant() {
 	      console.log("container show");
 	      var thunk = (0, _actionCreator.loadRestaurant)();

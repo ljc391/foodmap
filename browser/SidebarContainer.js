@@ -11,12 +11,6 @@ const mapStateToProps = function (state) {
 
 const mapDispatchToProps = function (dispatch) {
   return {
-    hideRestaurants:  ()=> {
-         // loadRestaurant();
-      console.log("container hide");
-      const thunk = hideRestaurant();
-      dispatch(thunk);
-    },
     loadRestaurant: ()=>{
       console.log("container show");
       const thunk = loadRestaurant();
