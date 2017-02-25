@@ -85,6 +85,10 @@ export default class Sidebar extends React.Component {
             })
             // console.log("--------sort by rating", res);
     }else{
+      console.log("sortBy distance", res[0]['marker']['distance']);
+      res.sort(function(a,b){
+              return a.marker.distance.split(" ")[0]-b.marker.distance.split(" ")[0];
+            })
     }
 
     this.props.updateFilterRestaurant(res);
@@ -104,7 +108,8 @@ export default class Sidebar extends React.Component {
                       return (
                           <li key = {restaurant.id} name = "ha" onClick={() => this.showInfo(restaurant.id)}>
                             <img src={restaurant.img} />
-                          { restaurant.name }
+                          <p>{ restaurant.name }</p>
+                          <p>{this.state.sortBy=="distance"?restaurant.marker.distance:""}</p>
 
                           </li>
 

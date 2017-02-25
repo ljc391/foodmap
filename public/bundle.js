@@ -30190,7 +30190,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.updateFilterRestaurant = exports.popRestaurant = exports.hideRestaurant = exports.loadCurLocation = exports.loadRestaurant = exports.FILTER_RESTAURANTS = exports.UPDATE_POP_RESTAURANT = exports.UPDATE_CURRANT_LOCATION = exports.LOAD_RESTAURANTS = undefined;
+	exports.updateFilterRestaurant = exports.popRestaurant = exports.hideRestaurant = exports.loadCurLocation = exports.loadRestaurantWithDistance = exports.loadRestaurant = exports.FILTER_RESTAURANTS = exports.UPDATE_POP_RESTAURANT = exports.UPDATE_CURRANT_LOCATION = exports.LOAD_RESTAURANTS = undefined;
 	
 	var _axios = __webpack_require__(269);
 	
@@ -30223,6 +30223,16 @@
 	    }).catch(function (err) {
 	      return console.error(err);
 	    });
+	  };
+	};
+	
+	var loadRestaurantWithDistance = exports.loadRestaurantWithDistance = function loadRestaurantWithDistance(restaurants) {
+	  return function (dispatch) {
+	    console.log("action creater loadRestaurantWithDistance");
+	
+	    // console.log("arr", restaurants.data);
+	    var action = receiveRestaurant(restaurants);
+	    dispatch(action);
 	  };
 	};
 	
@@ -30483,7 +30493,12 @@
 	          return b.rating - a.rating;
 	        });
 	        // console.log("--------sort by rating", res);
-	      } else {}
+	      } else {
+	        console.log("sortBy distance", res[0]['marker']['distance']);
+	        res.sort(function (a, b) {
+	          return a.marker.distance.split(" ")[0] - b.marker.distance.split(" ")[0];
+	        });
+	      }
 	
 	      this.props.updateFilterRestaurant(res);
 	    }
@@ -30525,7 +30540,16 @@
 	                  return _this2.showInfo(restaurant.id);
 	                } },
 	              _react2.default.createElement('img', { src: restaurant.img }),
-	              restaurant.name
+	              _react2.default.createElement(
+	                'p',
+	                null,
+	                restaurant.name
+	              ),
+	              _react2.default.createElement(
+	                'p',
+	                null,
+	                _this2.state.sortBy == "distance" ? restaurant.marker.distance : ""
+	              )
 	            );
 	          }) : null
 	        )
@@ -30578,7 +30602,6 @@
 	      dispatch(thunk);
 	    },
 	    updateFilterRestaurant: function updateFilterRestaurant(reataurants) {
-	      console.log("pop restaurant");
 	      var thunk = (0, _actionCreator.updateFilterRestaurant)(reataurants);
 	      dispatch(thunk);
 	    }
@@ -30627,7 +30650,7 @@
 	    _this.largeInfowindow;
 	    _this.state = { curmarker: null };
 	    _this.curmarker;
-	
+	    _this.addDistanct = _this.addDistanct.bind(_this);
 	    _this.clearMark = _this.clearMark.bind(_this);
 	
 	    return _this;
@@ -30697,19 +30720,20 @@
 	          _this2.curmarker.setMap(_this2.map);
 	          _this2.map.setCenter(pos);
 	          // console.log("GET CURRENT LOCATION");
-	          _this2.loadMarkers();
+	          _this2.addDistanct();
+	          // this.loadMarkers();
 	        });
 	      }
 	    }
 	  }, {
-	    key: "loadMarkers",
-	    value: function loadMarkers() {
+	    key: "addDistanct",
+	    value: function addDistanct() {
 	      var _this3 = this;
 	
-	      console.log("loadMarkers");
+	      console.log("loadMarkers", this.props);
 	      this.largeInfowindow = new google.maps.InfoWindow();
 	      // var bounds = new google.maps.LatLngBounds();
-	      var restaurants = this.props.filterRestaurants;
+	      var restaurants = this.props.restaurants;
 	      var cmarker; //= this.curmarker;
 	      // console.log("REST props", restaurants);
 	
@@ -30748,6 +30772,7 @@
 	        });
 	        ////bounds.extend(markers[i].position);
 	        _this3.markers.push(marker);
+	        restaurants[i]['marker'] = marker;
 	      };
 	
 	      for (var i = 0; i < restaurants.length; i++) {
@@ -30757,6 +30782,66 @@
 	        var service;
 	
 	        _loop();
+	      }
+	      this.props.loadRestaurantWithDistance(restaurants);
+	    }
+	  }, {
+	    key: "loadMarkers",
+	    value: function loadMarkers() {
+	      var _this4 = this;
+	
+	      console.log("loadMarkers");
+	      this.largeInfowindow = new google.maps.InfoWindow();
+	      // var bounds = new google.maps.LatLngBounds();
+	      var restaurants = this.props.filterRestaurants;
+	      var cmarker; //= this.curmarker;
+	      // console.log("REST props", restaurants);
+	
+	      var _loop2 = function _loop2() {
+	        // console.log(typeof restaurants[i]['id']);
+	        id = restaurants[i]['id'];
+	
+	        var position = { lat: restaurants[i].lat, lng: restaurants[i].lng };
+	        title = restaurants[i].name;
+	        properties = restaurants[i];
+	
+	        var marker = new google.maps.Marker({
+	          map: _this4.map,
+	          position: position,
+	          title: title,
+	          properties: properties,
+	          icon: "../images/restaurant.png",
+	          // animation: google.maps.Animation.DROP,
+	          id: id
+	        });
+	        service = new google.maps.DistanceMatrixService();
+	
+	        service.getDistanceMatrix({
+	          origins: [_this4.curmarker.position],
+	          destinations: [position],
+	          travelMode: google.maps.TravelMode.DRIVING,
+	          avoidHighways: false,
+	          avoidTolls: false
+	        }, function (response, status) {
+	          marker['distance'] = response.rows[0].elements[0].distance.text;
+	
+	          // this.markers.push(marker);
+	        });
+	        marker.addListener('click', function () {
+	          _this4.populateInfoWindow(marker, _this4.largeInfowindow);
+	        });
+	        ////bounds.extend(markers[i].position);
+	        _this4.markers.push(marker);
+	        restaurants[i]['distance'] = marker['distance'];
+	      };
+	
+	      for (var i = 0; i < restaurants.length; i++) {
+	        var id;
+	        var title;
+	        var properties;
+	        var service;
+	
+	        _loop2();
 	      }
 	      // console.log("all markers", this.markers);
 	    }
@@ -30843,11 +30928,15 @@
 	      // loadRestaurant();
 	      var thunk = (0, _actionCreator.loadCurLocation)(location);
 	      dispatch(thunk);
+	    },
+	    loadRestaurantWithDistance: function loadRestaurantWithDistance(restaurants) {
+	      var thunk = (0, _actionCreator.loadRestaurantWithDistance)(restaurants);
+	      dispatch(thunk);
 	    }
 	  };
 	};
 	
-	var componentCreator = (0, _reactRedux.connect)(mapStateToProps, null);
+	var componentCreator = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps);
 	var MapContainer = componentCreator(_Map2.default);
 	exports.default = MapContainer;
 

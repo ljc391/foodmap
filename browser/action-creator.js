@@ -25,6 +25,16 @@ export const loadRestaurant = function () {
   };
 };
 
+export const loadRestaurantWithDistance = function (restaurants) {
+  return function (dispatch) {
+    console.log("action creater loadRestaurantWithDistance");
+
+          // console.log("arr", restaurants.data);
+          const action = receiveRestaurant(restaurants);
+          dispatch(action);
+
+  };
+};
 
 const receiveLocation = function (location) {
   return {

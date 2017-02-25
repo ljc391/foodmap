@@ -22,7 +22,6 @@ const mapDispatchToProps = function (dispatch) {
       dispatch(thunk);
     },
     updateFilterRestaurant: (reataurants)=> {
-      console.log("pop restaurant");
       const thunk = updateFilterRestaurant(reataurants);
       dispatch(thunk);
     }

@@ -10,7 +10,7 @@ export default class Map extends React.Component {
         this.largeInfowindow;
         this.state = {curmarker:null};
         this.curmarker ;
-
+        this.addDistanct = this.addDistanct.bind(this);
         this.clearMark = this.clearMark.bind(this);
 
 
@@ -73,13 +73,62 @@ export default class Map extends React.Component {
                 this.curmarker.setMap(this.map);
                 this.map.setCenter(pos);
                 // console.log("GET CURRENT LOCATION");
-                this.loadMarkers();
+                this.addDistanct();
+                // this.loadMarkers();
 
             });
 
 
         }
 
+
+    }
+    addDistanct(){
+              console.log("loadMarkers", this.props);
+        this.largeInfowindow = new google.maps.InfoWindow();
+        // var bounds = new google.maps.LatLngBounds();
+        var restaurants = this.props.restaurants;
+        var cmarker ;//= this.curmarker;
+        // console.log("REST props", restaurants);
+        for (var i = 0; i < restaurants.length; i++) {
+          // console.log(typeof restaurants[i]['id']);
+          var id = restaurants[i]['id'];
+            const position = {lat:restaurants[i].lat, lng:restaurants[i].lng} ;
+            var title = restaurants[i].name;
+            var properties = restaurants[i];
+            const marker = new google.maps.Marker({
+              map: this.map,
+              position: position,
+              title: title,
+              properties: properties,
+              icon:"../images/restaurant.png",
+             // animation: google.maps.Animation.DROP,
+              id: id
+            });
+            var service = new google.maps.DistanceMatrixService();
+              service.getDistanceMatrix(
+                {
+                    origins: [this.curmarker.position],
+                    destinations: [position],
+                    travelMode: google.maps.TravelMode.DRIVING,
+                    avoidHighways: false,
+                    avoidTolls: false
+                },
+                (response, status) => {
+                  marker['distance'] = response.rows[0].elements[0].distance.text;
+
+                  // this.markers.push(marker);
+
+                }
+              );
+            marker.addListener('click', () => {
+              this.populateInfoWindow(marker, this.largeInfowindow);
+            });
+           ////bounds.extend(markers[i].position);
+           this.markers.push(marker);
+           restaurants[i]['marker'] = marker;
+        }
+        this.props.loadRestaurantWithDistance(restaurants);
 
     }
     loadMarkers(){
@@ -125,6 +174,7 @@ export default class Map extends React.Component {
             });
            ////bounds.extend(markers[i].position);
            this.markers.push(marker);
+           restaurants[i]['distance'] =marker['distance'];
         }
         // console.log("all markers", this.markers);
     }

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { loadRestaurant, loadCurLocation } from './action-creator';
+import { loadRestaurant, loadCurLocation , loadRestaurantWithDistance} from './action-creator';
 import Map from './Map';
 
 const mapStateToProps = function (state) {
@@ -18,9 +18,13 @@ const mapDispatchToProps = function (dispatch) {
       const thunk = loadCurLocation(location);
       dispatch(thunk);
     },
+    loadRestaurantWithDistance: function(restaurants){
+      const thunk = loadRestaurantWithDistance(restaurants);
+      dispatch(thunk);
+    }
   };
 };
 
-const componentCreator = connect(mapStateToProps,null);
+const componentCreator = connect(mapStateToProps,mapDispatchToProps);
 const MapContainer = componentCreator(Map);
 export default MapContainer;

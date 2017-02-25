@@ -8,6 +8,7 @@
         text-align: left;
         width: 340px;
         overflow: scroll;
+
 }
 
 #map{
@@ -17,7 +18,9 @@
         position: absolute;
         right: 0px;
 }
-
+#home{
+  height: 100%;
+}
 html,
       body {
 
@@ -25,6 +28,9 @@ html,
         height: 100%;
         margin: 0;
         padding: 0;
+      }
+      p{
+        padding-left: 5px;
       }
 
       .container {
