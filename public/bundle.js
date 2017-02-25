@@ -30403,16 +30403,29 @@
 	      this.showInfo = this.showInfo.bind(this);
 	      this.searchInput = this.searchInput.bind(this);
 	      this.sortRestaurants = this.sortRestaurants.bind(this);
-	      this.state = { sortBy: "price" };
+	      this.state = { sortBy: "price",
+	        price: "true",
+	        rating: "false",
+	        distance: "false" };
 	    }
 	  }, {
 	    key: 'showListings',
 	    value: function showListings(e) {
 	      // e.preventDefault();
 	      console.log("click show listings");
+	      var res = this.props.restaurants;
+	      if (this.props.filterRestaurants.length > 0) res = this.props.filterRestaurants;
+	      if (this.state.sortBy == "price") {
+	        res.sort(function (a, b) {
+	          return a.price - b.price;
+	        });
+	      } else if (this.state.sortBy == "rating") {
+	        res.sort(function (a, b) {
+	          return b.rating - a.rating;
+	        });
+	      } else {}
 	
-	      this.props.updateFilterRestaurant(this.props.restaurants);
-	      // this.props.loadRestaurant();
+	      this.props.updateFilterRestaurant(res);
 	    }
 	  }, {
 	    key: 'hideListings',
@@ -30454,20 +30467,24 @@
 	    key: 'sortRestaurants',
 	    value: function sortRestaurants(e) {
 	      console.log("sort restaurants by price", e.target.id);
+	      e.target.checked = true;
 	      this.setState({ sortBy: e.target.id });
 	      var res = this.props.restaurants;
 	      if (this.props.filterRestaurants.length > 0) res = this.props.filterRestaurants;
 	      if (e.target.id == "price") {
+	
 	        res.sort(function (a, b) {
 	          return a.price - b.price;
 	        });
+	        // console.log("--------sort by price", res);
 	      } else if (e.target.id == "rating") {
+	        // console.log("--------sort by rating");
 	        res.sort(function (a, b) {
 	          return b.rating - a.rating;
 	        });
-	      }
+	        // console.log("--------sort by rating", res);
+	      } else {}
 	
-	      console.log(res);
 	      this.props.updateFilterRestaurant(res);
 	    }
 	  }, {
@@ -30491,11 +30508,11 @@
 	          'p',
 	          null,
 	          'Sort By ',
-	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'price', onChange: this.sortRestaurants }),
+	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'price', defaultChecked: this.state && this.state.sortBy === "price", onChange: this.sortRestaurants }),
 	          ' Price ',
-	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'rating', onChange: this.sortRestaurants }),
+	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'rating', checked: this.state && this.state.sortBy === "rating", onChange: this.sortRestaurants }),
 	          ' Rating ',
-	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'distance', onChange: this.sortRestaurants }),
+	          _react2.default.createElement('input', { type: 'radio', name: 'sort', id: 'distance', checked: this.state && this.state.sortBy === "distance", onChange: this.sortRestaurants }),
 	          ' Distance'
 	        ),
 	        _react2.default.createElement(

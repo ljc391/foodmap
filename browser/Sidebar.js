@@ -10,15 +10,29 @@ export default class Sidebar extends React.Component {
     this.showInfo = this.showInfo.bind(this);
     this.searchInput = this.searchInput.bind(this);
     this.sortRestaurants = this.sortRestaurants.bind(this);
-    this.state = {sortBy:"price"};
+    this.state = {sortBy:"price",
+                  price:"true",
+                  rating:"false",
+                  distance:"false"};
   }
 
   showListings(e) {
     // e.preventDefault();
     console.log("click show listings");
+    var res = this.props.restaurants;
+    if(this.props.filterRestaurants.length>0)res= this.props.filterRestaurants;
+    if(this.state.sortBy == "price"){
+          res.sort(function(a,b){
+            return a.price-b.price;
+          })
+    }else if(this.state.sortBy == "rating"){
+            res.sort(function(a,b){
+              return b.rating-a.rating;
+            })
+    }else{
+    }
 
-    this.props.updateFilterRestaurant(this.props.restaurants);
-    // this.props.loadRestaurant();
+    this.props.updateFilterRestaurant(res);
 
   }
   hideListings(e) {
@@ -54,20 +68,25 @@ export default class Sidebar extends React.Component {
   }
   sortRestaurants(e){
     console.log("sort restaurants by price", e.target.id);
+    e.target.checked = true;
     this.setState({sortBy: e.target.id});
     var res = this.props.restaurants;
     if(this.props.filterRestaurants.length>0)res= this.props.filterRestaurants;
     if(e.target.id == "price"){
+
           res.sort(function(a,b){
             return a.price-b.price;
           })
+            // console.log("--------sort by price", res);
     }else if(e.target.id == "rating"){
+      // console.log("--------sort by rating");
             res.sort(function(a,b){
               return b.rating-a.rating;
             })
+            // console.log("--------sort by rating", res);
+    }else{
     }
 
-    console.log(res);
     this.props.updateFilterRestaurant(res);
   }
   render () {
@@ -78,7 +97,7 @@ export default class Sidebar extends React.Component {
         <input id="show-listings"   className="btn btn-info" defaultValue="Show All Places" onClick={this.showListings} />
         <input id="hide-listings"   className="btn btn-warning"  defaultValue="Hide All Places" onClick={this.hideListings} />
         <input type="text" id = "inputbox" className="form-control" placeholder="Searching..."onChange={this.searchInput}/>
-        <p>Sort By <input type="radio" name="sort" id="price"  onChange={this.sortRestaurants}/> Price <input type="radio" name="sort" id="rating"  onChange={this.sortRestaurants}/> Rating <input type="radio" name="sort" id="distance"  onChange={this.sortRestaurants}/> Distance</p>
+        <p>Sort By <input type="radio" name="sort" id="price" defaultChecked={ this.state&&this.state.sortBy === "price"} onChange={this.sortRestaurants}/> Price <input type="radio" name="sort" id="rating" checked={ this.state&&this.state.sortBy === "rating"}  onChange={this.sortRestaurants}/> Rating <input type="radio" name="sort"  id="distance" checked={ this.state&&this.state.sortBy === "distance"} onChange={this.sortRestaurants}/> Distance</p>
 
         <ul id = "listOfPlaces">
           {this.props.filterRestaurants&&this.props.filterRestaurants.length>0 ? this.props.filterRestaurants.map(restaurant => {
