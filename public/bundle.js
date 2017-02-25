@@ -30832,7 +30832,6 @@
 	        });
 	        ////bounds.extend(markers[i].position);
 	        _this4.markers.push(marker);
-	        restaurants[i]['distance'] = marker['distance'];
 	      };
 	
 	      for (var i = 0; i < restaurants.length; i++) {
@@ -30870,9 +30869,9 @@
 	        infowindow.setContent('<h1 id="firstHeading" class="firstHeading">' + marker.title + '</h1>' + '<img src= "' + marker.properties.img + '" width = "200 px">' + '<p>' + marker.properties.address + '</p>' + '<p>' + marker.properties.description + '</p>' + star + '<br>' + pirce);
 	        infowindow.open(this.map, marker);
 	        // Make sure the marker property is cleared if the infowindow is closed.
-	        infowindow.addListener('closeclick', function () {
-	          marker.setMap(null);
-	        });
+	        // infowindow.addListener('closeclick',()=>{
+	        //   marker.setMap(null);
+	        // }) ;
 	      }
 	    }
 	  }, {

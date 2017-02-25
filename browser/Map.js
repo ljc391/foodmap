@@ -174,7 +174,6 @@ export default class Map extends React.Component {
             });
            ////bounds.extend(markers[i].position);
            this.markers.push(marker);
-           restaurants[i]['distance'] =marker['distance'];
         }
         // console.log("all markers", this.markers);
     }
@@ -209,9 +208,9 @@ export default class Map extends React.Component {
           );
           infowindow.open(this.map, marker);
           // Make sure the marker property is cleared if the infowindow is closed.
-          infowindow.addListener('closeclick',()=>{
-            marker.setMap(null);
-          }) ;
+          // infowindow.addListener('closeclick',()=>{
+          //   marker.setMap(null);
+          // }) ;
         }
     }
 
