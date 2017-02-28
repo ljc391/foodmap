@@ -1,6 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router';
 import axios from 'axios';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
+const style = {
+  margin: 12,
+};
 
 export default class Sidebar extends React.Component {
   componentDidMount(){
@@ -98,12 +104,17 @@ export default class Sidebar extends React.Component {
     return (
       <div id = "sidebar">
         <h1>Elaine's Map NYC</h1>
-        <input id="show-listings"   className="btn btn-info" defaultValue="Show All Places" onClick={this.showListings} />
-        <input id="hide-listings"   className="btn btn-warning"  defaultValue="Hide All Places" onClick={this.hideListings} />
-        <input type="text" id = "inputbox" className="form-control" placeholder="Searching..."onChange={this.searchInput}/>
-        <p>Sort By <input type="radio" name="sort" id="price" defaultChecked={ this.state&&this.state.sortBy === "price"} onChange={this.sortRestaurants}/> Price <input type="radio" name="sort" id="rating" checked={ this.state&&this.state.sortBy === "rating"}  onChange={this.sortRestaurants}/> Rating <input type="radio" name="sort"  id="distance" checked={ this.state&&this.state.sortBy === "distance"} onChange={this.sortRestaurants}/> Distance</p>
 
-        <ul id = "listOfPlaces">
+        <RaisedButton label="Show All Restaurants" primary={true} style={style} onClick={this.showListings} fullWidth={true} />
+        <RaisedButton label="Hide All Restaurants" secondary={true} style={style} onClick={this.hideListings} fullWidth={true} />
+        <TextField hintText="Searching..." fullWidth={true} onChange={this.searchInput}/>
+        <p>Sort By</p>
+        <RadioButtonGroup name="status" defaultSelected="price" style={{ display: 'flex', width: '20px'}} >
+          <RadioButton id = "price" value="price" label="price"default onClick={this.sortRestaurants}  style={{ paddingLeft:'10px'}}  />
+          <RadioButton id = "rating" value="rating" label="rating" onClick={this.sortRestaurants} style={{ paddingLeft:'10px'}}   />
+          <RadioButton id = "distance" value="distance" label="distance" onClick={this.sortRestaurants} style={{ paddingLeft:'10px'}}   />
+          </RadioButtonGroup>
+         <ul id = "listOfPlaces">
           {this.props.filterRestaurants&&this.props.filterRestaurants.length>0 ? this.props.filterRestaurants.map(restaurant => {
                       return (
                           <li key = {restaurant.id} name = "ha" onClick={() => this.showInfo(restaurant.id)}>

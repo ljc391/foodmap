@@ -40,11 +40,7 @@ html,
       input {
         font-size: 12px;
       }
-      span {
-        margin-left: 10px;
-        background: lightblue;
-        border-radius: 5px;
-      }
+
       h1 {
         color: #525454;
         font-size: 30px;

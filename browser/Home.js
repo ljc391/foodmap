@@ -6,6 +6,9 @@ import SidebarContainer from './SidebarContainer';
 import Map from './Map';
 import MapContainer from './MapContainer'
 import axios from 'axios';
+
+
+
 export default class Home extends Component {
 
   componentDidMount () {

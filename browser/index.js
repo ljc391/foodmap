@@ -10,7 +10,8 @@ import { hashHistory, IndexRoute } from 'react-router';
 import store from './store'
 import Home from './Home'
 import { loadRestaurant } from './action-creator';
-
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 const onRestaurantEnter = function () {
   const thunk = loadRestaurant();
   store.dispatch(thunk);
@@ -20,12 +21,14 @@ const onRestaurantEnter = function () {
 
 
 ReactDOM.render(
+  <MuiThemeProvider >
   <Provider store={store}>
 
         <Router history={hashHistory}>
           <Route path="/" component={ HomeContainer } onEnter={onRestaurantEnter}  >
           </Route>
         </Router>
-  </Provider>,
+  </Provider>
+    </MuiThemeProvider >,
   document.getElementById('app')
 );
