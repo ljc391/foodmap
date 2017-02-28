@@ -108,8 +108,8 @@ export default class Sidebar extends React.Component {
                       return (
                           <li key = {restaurant.id} name = "ha" onClick={() => this.showInfo(restaurant.id)}>
                             <img src={restaurant.img} />
-                          <p>{ restaurant.name }</p>
-                          <p>{this.state.sortBy=="distance"?restaurant.marker.distance:""}</p>
+                          <p>{ restaurant.name } </p>
+                          <span><br />{this.state.sortBy=="distance"?restaurant.marker.distance:""}</span>
 
                           </li>
 

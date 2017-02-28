@@ -30543,11 +30543,13 @@
 	              _react2.default.createElement(
 	                'p',
 	                null,
-	                restaurant.name
+	                restaurant.name,
+	                ' '
 	              ),
 	              _react2.default.createElement(
-	                'p',
+	                'span',
 	                null,
+	                _react2.default.createElement('br', null),
 	                _this2.state.sortBy == "distance" ? restaurant.marker.distance : ""
 	              )
 	            );
