@@ -57,7 +57,9 @@ export default class Sidebar extends React.Component {
     var title = e.target.value.toLowerCase();
     var res = [];
     for(var i = 0; i < this.props.restaurants.length; i++){
-      if(this.props.restaurants[i].name.indexOf(title)>=0 ){
+      console.log("name", this.props.restaurants[i].name);
+      if(this.props.restaurants[i].name.toLowerCase().indexOf(title)>=0 ){
+        console.log("push");
         res.push(this.props.restaurants[i]);
       }else{
         for(var j = 0; j < this.props.restaurants[i].tags.length; j++){
