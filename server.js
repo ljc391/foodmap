@@ -11,7 +11,7 @@ app.use(volleyball);
 app.use(express.static(__dirname));
 
 app.use('/api', require('./routes'));
-var port = 3000;
+var port = process.env.PORT || 3000;
 app.listen(port, function () {
   console.log('The server is listening closely on port', port);
   db.sync()
