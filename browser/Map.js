@@ -4,7 +4,7 @@ import React from 'react';
 export default class Map extends React.Component {
     constructor(props) {
         super(props);
-        console.log("constructor", props);
+        // console.log("constructor", props);
         this.map;
         this.markers = [];
         this.largeInfowindow;
@@ -16,15 +16,15 @@ export default class Map extends React.Component {
 
     }
     componentWillMount(){
-        console.log("WILLM------",this.props);
+        // console.log("WILLM------",this.props);
     }
     componentDidMount(){
-        console.log("DIDM------",this.props);
+        // console.log("DIDM------",this.props);
         this.initMap();
 
     }
     componentDidUpdate(){
-        console.log("DIDUPDATE--------", this.props);
+        // console.log("DIDUPDATE--------", this.props);
 
 
         if(this.curmarker){
@@ -43,18 +43,18 @@ export default class Map extends React.Component {
 
     }
     componentWillReceiveProps(){
-        console.log("WILLRECEVE--------",this.props);
+        // console.log("WILLRECEVE--------",this.props);
 
 
 
     }
     componentWillUpdate(){
-        console.log("WILLUPDATE-----------",this.props);
+        // console.log("WILLUPDATE-----------",this.props);
 
 
     }
     initMap(){
-        console.log("init");
+        // console.log("init");
         this.map = new google.maps.Map(this.refs.map, {
           zoom: 16
         });
@@ -84,7 +84,7 @@ export default class Map extends React.Component {
 
     }
     addDistanct(){
-              console.log("loadMarkers", this.props);
+              // console.log("loadMarkers", this.props);
         this.largeInfowindow = new google.maps.InfoWindow();
         // var bounds = new google.maps.LatLngBounds();
         var restaurants = this.props.restaurants;
@@ -132,7 +132,7 @@ export default class Map extends React.Component {
 
     }
     loadMarkers(){
-        console.log("loadMarkers");
+        // console.log("loadMarkers");
         this.largeInfowindow = new google.maps.InfoWindow();
         // var bounds = new google.maps.LatLngBounds();
         var restaurants = this.props.filterRestaurants;
@@ -178,7 +178,7 @@ export default class Map extends React.Component {
         // console.log("all markers", this.markers);
     }
     clearMark(){
-        console.log("clear marker", this.props);
+        // console.log("clear marker", this.props);
         for (var i = 0; i < this.markers.length; i++) {
           this.markers[i].setMap(null);
         }
@@ -216,7 +216,7 @@ export default class Map extends React.Component {
 
 
   render () {
-    console.log("RENDER----------map", this.props );
+    // console.log("RENDER----------map", this.props );
     // this.load(this.props.restaurants);
     return (
       <div ref = "map" id = "map">

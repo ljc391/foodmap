@@ -24,7 +24,7 @@ export default class Sidebar extends React.Component {
 
   showListings(e) {
     // e.preventDefault();
-    console.log("click show listings");
+    // console.log("click show listings");
     var res = this.props.restaurants;
     if(this.props.filterRestaurants.length>0)res= this.props.filterRestaurants;
     if(this.state.sortBy == "price"){
@@ -43,23 +43,23 @@ export default class Sidebar extends React.Component {
   }
   hideListings(e) {
     // e.preventDefault();
-    console.log("click Hide listings", this.props);
+    // console.log("click Hide listings", this.props);
     this.props.updateFilterRestaurant([]);
 
   }
   showInfo(id){
     // e.preventDefault();
-    console.log("show infor");
-    console.log(id);
+    // console.log("show infor");
+    // console.log(id);
     this.props.popRestaurant(id);
   }
   searchInput(e){
     var title = e.target.value.toLowerCase();
     var res = [];
     for(var i = 0; i < this.props.restaurants.length; i++){
-      console.log("name", this.props.restaurants[i].name);
+      // console.log("name", this.props.restaurants[i].name);
       if(this.props.restaurants[i].name.toLowerCase().indexOf(title)>=0 ){
-        console.log("push");
+        // console.log("push");
         res.push(this.props.restaurants[i]);
       }else{
         for(var j = 0; j < this.props.restaurants[i].tags.length; j++){
@@ -75,7 +75,7 @@ export default class Sidebar extends React.Component {
     // event.target.value
   }
   sortRestaurants(e){
-    console.log("sort restaurants by price", e.target.id);
+    // console.log("sort restaurants by price", e.target.id);
     e.target.checked = true;
     this.setState({sortBy: e.target.id});
     var res = this.props.restaurants;
@@ -93,7 +93,7 @@ export default class Sidebar extends React.Component {
             })
             // console.log("--------sort by rating", res);
     }else{
-      console.log("sortBy distance", res[0]['marker']['distance']);
+      // console.log("sortBy distance", res[0]['marker']['distance']);
       res.sort(function(a,b){
               return a.marker.distance.split(" ")[0]-b.marker.distance.split(" ")[0];
             })
@@ -102,7 +102,7 @@ export default class Sidebar extends React.Component {
     this.props.updateFilterRestaurant(res);
   }
   render () {
-        console.log("sidebar", this.state);
+        // console.log("sidebar", this.state);
     return (
       <div id = "sidebar">
         <h1>Elaine's Map NYC</h1>
