@@ -3,7 +3,12 @@ import { Link } from 'react-router';
 import axios from 'axios';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
+import Avatar from 'material-ui/Avatar';
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
+import {
+  white,
+  grey300
+} from 'material-ui/styles/colors';
 const style = {
   margin: 12,
 };
@@ -16,6 +21,8 @@ export default class Sidebar extends React.Component {
     this.showInfo = this.showInfo.bind(this);
     this.searchInput = this.searchInput.bind(this);
     this.sortRestaurants = this.sortRestaurants.bind(this);
+    this.close = this.close.bind(this);
+    this.open = this.open.bind(this);
     this.state = {sortBy:"price",
                   price:"true",
                   rating:"false",
@@ -51,6 +58,15 @@ export default class Sidebar extends React.Component {
     // e.preventDefault();
     // console.log("show infor");
     // console.log(id);
+    // var sidebar = document.getElementById("sidebar");
+    console.log(screen.width);
+    if(screen.width<=750){
+      var sidebar = document.getElementById("sidebar");
+      sidebar.classList.add("sideBarHide");
+      var btn = document.getElementById('showBtn');
+      showBtn.classList.add("showBtn");
+
+    }
     this.props.popRestaurant(id);
   }
   searchInput(e){
@@ -73,6 +89,20 @@ export default class Sidebar extends React.Component {
     }
     this.props.updateFilterRestaurant(res);
     // event.target.value
+  }
+  close(e){
+    console.log("close");
+    var sidebar = document.getElementById("sidebar");
+    sidebar.classList.add("sideBarHide");
+    var btn = document.getElementById('showBtn');
+    showBtn.classList.add("showBtn");
+  }
+  open(e){
+    var sidebar = document.getElementById("sidebar");
+    sidebar.classList.remove("sideBarHide");
+
+    var btn = document.getElementById('showBtn');
+    showBtn.classList.remove("showBtn");
   }
   sortRestaurants(e){
     // console.log("sort restaurants by price", e.target.id);
@@ -106,6 +136,18 @@ export default class Sidebar extends React.Component {
     return (
       <div id = "sidebar">
         <h1>Elaine's Map NYC</h1>
+        <Avatar
+          id="close"
+          color={white}
+          backgroundColor={grey300}
+          size={30}
+          style={style}
+          onClick={this.close}
+        >
+          X
+        </Avatar>
+
+        <img src = "../images/side.png"  width="40" height="40" id = "showBtn" onClick={this.open}/>
 
         <RaisedButton label="Show All Restaurants" primary={true} style={style} onClick={this.showListings} fullWidth={true} />
         <RaisedButton label="Hide All Restaurants" secondary={true} style={style} onClick={this.hideListings} fullWidth={true} />
