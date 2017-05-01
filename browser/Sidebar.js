@@ -60,7 +60,7 @@ export default class Sidebar extends React.Component {
     // console.log(id);
     // var sidebar = document.getElementById("sidebar");
     console.log(screen.width);
-    if(screen.width<=750){
+    if(screen.width<=450){
       var sidebar = document.getElementById("sidebar");
       sidebar.classList.add("sideBarHide");
       var btn = document.getElementById('showBtn');
