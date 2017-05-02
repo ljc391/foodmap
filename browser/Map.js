@@ -24,13 +24,13 @@ export default class Map extends React.Component {
 
     }
     componentDidUpdate(){
-        // console.log("DIDUPDATE--------", this.props);
+        console.log("DIDUPDATE--------", this.props);
 
 
-        if(this.curmarker){
+        // if(this.curmarker){
           this.clearMark();
          this.loadMarkers();
-       }
+       // }
         if(this.props.popRestaurant){
           // console.log("POP restaurants", this.props.popRestaurant);
           var cur;
@@ -54,33 +54,53 @@ export default class Map extends React.Component {
 
     }
     initMap(){
-        // console.log("init");
+        console.log("init");
         this.map = new google.maps.Map(this.refs.map, {
-          zoom: 16
+          zoom: 16,
+          center: {lat: 40.727362, lng:  -73.988570},
+
         });
         if (navigator.geolocation) {
+
+          console.log("init  geo");
             navigator.geolocation.getCurrentPosition((position)=> {
                 var pos = {
                   lat: position.coords.latitude,
                   lng: position.coords.longitude
                 };
+                console.log(pos,"----");
                 this.curmarker = new google.maps.Marker({
                     map: this.map,
                     position: pos,
                     title: "current location",
                     icon: "./images/cur.png"
                 });
+
+                this.props.updateGeo(this.curmarker);
                 this.curmarker.setMap(this.map);
                 this.map.setCenter(pos);
                 // console.log("GET CURRENT LOCATION");
                 this.addDistanct();
                 // this.loadMarkers();
 
+            }, ()=>{
+                          console.log("init fake geo");
+                      // var pos = {
+                      //         lat: 40.738842,
+                      //         lng: -73.992168
+                      //       };
+                      //       this.curmarker = null;
+                            // this.curmarker.setMap(this.map);
+                            // this.map.setCenter(pos);
+                            // console.log("GET CURRENT LOCATION");
+                            this.addDistanct();
+
+
+
             });
 
 
         }
-
 
     }
     addDistanct(){
@@ -106,7 +126,8 @@ export default class Map extends React.Component {
               id: id
             });
             var service = new google.maps.DistanceMatrixService();
-              service.getDistanceMatrix(
+            if(this.curmarker){
+                service.getDistanceMatrix(
                 {
                     origins: [this.curmarker.position],
                     destinations: [position],
@@ -121,6 +142,8 @@ export default class Map extends React.Component {
 
                 }
               );
+            }
+
             marker.addListener('click', () => {
               this.populateInfoWindow(marker, this.largeInfowindow);
             });
@@ -132,7 +155,7 @@ export default class Map extends React.Component {
 
     }
     loadMarkers(){
-        // console.log("loadMarkers");
+        console.log("loadMarkers");
         this.largeInfowindow = new google.maps.InfoWindow();
         // var bounds = new google.maps.LatLngBounds();
         var restaurants = this.props.filterRestaurants;
@@ -154,6 +177,7 @@ export default class Map extends React.Component {
               id: id
             });
             var service = new google.maps.DistanceMatrixService();
+            if(this.curmarker){
               service.getDistanceMatrix(
                 {
                     origins: [this.curmarker.position],
@@ -169,6 +193,7 @@ export default class Map extends React.Component {
 
                 }
               );
+            }
             marker.addListener('click', () => {
               this.populateInfoWindow(marker, this.largeInfowindow);
             });

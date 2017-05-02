@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { loadRestaurant, loadCurLocation , loadRestaurantWithDistance} from './action-creator';
+import { loadRestaurant, loadCurLocation , loadRestaurantWithDistance, updateGeo} from './action-creator';
 import Map from './Map';
 
 const mapStateToProps = function (state) {
@@ -7,7 +7,8 @@ const mapStateToProps = function (state) {
     restaurants: state.allRestaurants,
     curLocation: state.curLocation,
     popRestaurant: state.popRestaurant,
-    filterRestaurants: state.filterRestaurants
+    filterRestaurants: state.filterRestaurants,
+    geo: state.geo
   };
 };
 
@@ -20,6 +21,10 @@ const mapDispatchToProps = function (dispatch) {
     },
     loadRestaurantWithDistance: function(restaurants){
       const thunk = loadRestaurantWithDistance(restaurants);
+      dispatch(thunk);
+    },
+    updateGeo: function(geo){
+      const thunk = updateGeo(geo);
       dispatch(thunk);
     }
   };

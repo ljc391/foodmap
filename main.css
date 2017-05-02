@@ -11,9 +11,7 @@
 
   }
   .showBtn{
-  /*visibility: hidden;*/
     z-index: 999 !important;
-    /* margin-left: 200%; */
     position: fixed;
     margin-left: 90%;
     visibility: visible !important;
@@ -24,7 +22,7 @@
   }
   #map{
     width: 100%;
-    margin-left: -30%;
+    margin-left: -33%;
   }
   #close{
   visibility: visible !important;

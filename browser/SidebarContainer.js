@@ -5,7 +5,8 @@ import Sidebar from './Sidebar';
 const mapStateToProps = function (state) {
   return {
     restaurants: state.allRestaurants,
-    filterRestaurants: state.filterRestaurants
+    filterRestaurants: state.filterRestaurants,
+    geo: state.geo
   };
 };
 

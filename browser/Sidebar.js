@@ -106,6 +106,7 @@ export default class Sidebar extends React.Component {
   }
   sortRestaurants(e){
     // console.log("sort restaurants by price", e.target.id);
+
     e.target.checked = true;
     this.setState({sortBy: e.target.id});
     var res = this.props.restaurants;
@@ -132,7 +133,7 @@ export default class Sidebar extends React.Component {
     this.props.updateFilterRestaurant(res);
   }
   render () {
-        // console.log("sidebar", this.state);
+        console.log("sidebar", this.props.geo);
     return (
       <div id = "sidebar">
         <h1>Elaine's Map NYC</h1>
@@ -153,11 +154,18 @@ export default class Sidebar extends React.Component {
         <RaisedButton label="Hide All Restaurants" secondary={true} style={style} onClick={this.hideListings} fullWidth={true} />
         <TextField hintText="Searching..." fullWidth={true} onChange={this.searchInput}/>
         <p>Sort By</p>
-        <RadioButtonGroup name="status" defaultSelected="price" style={{ display: 'flex', width: '20px'}} >
+        {this.props.geo!=undefined?
+                  <RadioButtonGroup name="status" defaultSelected="price" style={{ display: 'flex', width: '20px'}} >
           <RadioButton id = "price" value="price" label="price"default onClick={this.sortRestaurants}  style={{ paddingLeft:'10px'}}  />
           <RadioButton id = "rating" value="rating" label="rating" onClick={this.sortRestaurants} style={{ paddingLeft:'10px'}}   />
           <RadioButton id = "distance" value="distance" label="distance" onClick={this.sortRestaurants} style={{ paddingLeft:'10px'}}   />
-          </RadioButtonGroup>
+        </RadioButtonGroup>
+          :
+        <RadioButtonGroup name="status" defaultSelected="price" style={{ display: 'flex', width: '20px'}} >
+          <RadioButton id = "price" value="price" label="price"default onClick={this.sortRestaurants}  style={{ paddingLeft:'10px'}}  />
+          <RadioButton id = "rating" value="rating" label="rating" onClick={this.sortRestaurants} style={{ paddingLeft:'10px'}}   />
+
+        </RadioButtonGroup>}
          <ul id = "listOfPlaces">
           {this.props.filterRestaurants&&this.props.filterRestaurants.length>0 ? this.props.filterRestaurants.map(restaurant => {
                       return (
